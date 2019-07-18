@@ -29,6 +29,15 @@ target 'movie_app' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
+
+
+
+
+
+
+
+  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
   target 'movie_appTests' do
     inherit! :search_paths
     # Pods for testing
