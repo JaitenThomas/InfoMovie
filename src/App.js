@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import TabBarIcon from './common/TabBarIcon';
 
 import {
   createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator
+  header
 } from 'react-navigation';
 
 import SearchScreen from './screens/SearchScreen';
 
-import MovieTopRatedScreen from './screens/movie/MovieTopRatedScreen';
-import MovieUpcomingScreen from './screens/movie/MovieUpcomingScreen';
-import MoviePopularScreen from './screens/movie/MoviePopularScreen';
+import MovieScreen from './screens/movie/MovieScreen';
 import MovieDetailScreen from './screens/movie/MovieDetailScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
@@ -30,33 +29,46 @@ class App extends Component {
   }
 }
 
-const topTabNavigator = createMaterialTopTabNavigator(
-  {
-    Upcoming: MovieUpcomingScreen,
-    Popular: MoviePopularScreen,
-    'Top Rated': MovieTopRatedScreen
-  },
-  {
-    tabBarOptions: {
-      labelStyle: {
-        fontSize: 12
-      }
-    }
-  }
-);
-
 const bottomTabNavigator = createBottomTabNavigator(
   {
-    Search: SearchScreen,
-    Movie: topTabNavigator,
-    Television: TelevisionScreen
+    Movie: {
+      screen: MovieScreen,
+      navigationOptions: {
+        tabBarIcon: TabBarIcon('MaterialCommunityIcon')('movie')(25)
+      }
+    },
+    Television: {
+      screen: TelevisionScreen,
+      navigationOptions: {
+        tabBarIcon: TabBarIcon('FontAwesome')('television')(25)
+      }
+    },
+    Search: {
+      screen: SearchScreen,
+      navigationOptions: {
+        tabBarIcon: TabBarIcon('FontAwesome')('search')(25)
+      }
+    }
   },
   {
     navigationOptions: ({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index];
       return {
-        headerTitle: routeName
+        headerTitle: routeName,
+        headerTitleStyle: {
+          color: 'white'
+        },
+        headerStyle: {
+          backgroundColor: '#23272A'
+        },
+        headerTintColor: 'white'
       };
+    },
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#23272A'
+      },
+      activeTintColor: '#FFFFFF'
     }
   }
 );

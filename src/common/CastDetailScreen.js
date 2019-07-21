@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, ImageBackground } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  ImageBackground,
+  ActivityIndicator,
+  FlatList
+} from 'react-native';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 const PERSON_PATH = `https://api.themoviedb.org/3/person/`;
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
+
+import LinearGradient from 'react-native-linear-gradient';
 
 class CastDetailScreen extends Component {
   state = {
@@ -12,10 +22,17 @@ class CastDetailScreen extends Component {
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: '' + navigation.getParam('name')
+    // title: '' + navigation.getParam('title'),
+    headerTransparent: true,
+    headerTitleStyle: {
+      color: 'white'
+    },
+    headerTintColor: 'white'
   });
 
   fetchPersonDetails() {
+    this.setState({ loading: true });
+
     const URI = `${PERSON_PATH}${
       this.state.id
     }?api_key=${API_KEY}&language=en-US`;
@@ -23,71 +40,91 @@ class CastDetailScreen extends Component {
     fetch(URI)
       .then(res => res.json())
       .then(res =>
-        this.setState({ data: res }, () => {
+        this.setState({ data: res, loading: false }, () => {
           console.log(res);
         })
       );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchPersonDetails();
   }
 
+  renderStar() {}
+
   render() {
     return (
-      <React.Fragment>
-        <View style={{ height: 200 }}>
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        {/*HEADER CONTAINER*/}
+        <View style={{ flex: 1, backgroundColor: 'red' }}>
           <ImageBackground
+            resizeMode={'cover'}
             style={{
-              display: 'flex',
-              backgroundColor: 'red',
-              flexDirection: 'row',
-              flex: 1,
-              alignItems: 'center'
+              flex: 1
             }}
             source={{
               uri: `${IMAGE_PATH}${this.props.navigation.getParam('image')}`
             }}
           >
-            <Image
+            <LinearGradient
+              start={{ x: 0.5, y: 0 }}
+              colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
               style={{
                 flex: 1,
-                height: '75%',
-                width: '25%',
-                marginLeft: 15,
-                borderRadius: 15
-              }}
-              source={{ uri: `${IMAGE_PATH}${this.state.data.profile_path}` }}
-            />
-            <View
-              style={{
-                display: 'flex',
-                flex: 2,
-                flexDirection: 'column',
-                backgroundColor: 'rgba(0,0,0,0)',
-                height: '75%',
-                width: '25%',
-                justifyContent: 'space-evenly',
-                marginRight: 15,
-                marginLeft: 15
+                justifyContent: 'center',
+                alignItems: 'center'
               }}
             >
-              <Text
-                style={{ color: 'white', fontWeight: 'bold', fontSize: 25 }}
+              <View
+                style={{
+                  display: 'flex',
+                  height: '60%',
+                  flexDirection: 'row',
+                  width: '85%'
+                }}
               >
-                {this.state.data.name}
-              </Text>
-              <Text style={{ color: 'white' }}>
-                {this.state.data.known_for_department}
-              </Text>
-              <Text style={{ color: 'white' }}>{this.state.data.birthday}</Text>
-            </View>
+                <View style={{ flex: 1 }}>
+                  <Image
+                    style={{ flex: 1, borderRadius: 15 }}
+                    source={{
+                      uri: `${IMAGE_PATH}${this.state.data.profile_path}`
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    flex: 2,
+                    marginLeft: 5,
+                    justifyContent: 'space-around'
+                  }}
+                >
+                  <Text
+                    style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}
+                  >
+                    {this.state.data.name}
+                  </Text>
+                  <Text style={{ color: 'white', fontSize: 20 }}>
+                    {this.state.data.known_for_department || 'unknown'}
+                  </Text>
+                  <Text style={{ color: 'white', fontSize: 20 }}>
+                    {this.state.data.birthday || 'unknown'}
+                  </Text>
+                </View>
+              </View>
+            </LinearGradient>
           </ImageBackground>
         </View>
-        <ScrollView style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <Text>{this.state.data.biography}</Text>
-        </ScrollView>
-      </React.Fragment>
+
+        {/*BODY CONTAINER*/}
+        <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
+          <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
+              Biography
+            </Text>
+            <Text style={{ color: 'white' }}>{this.state.data.biography}</Text>
+          </ScrollView>
+        </View>
+      </View>
     );
   }
 }

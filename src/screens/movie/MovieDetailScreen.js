@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
+import YoutubePlayer from 'react-native-yt-player';
+import Youtube from 'react-native-youtube';
+import LinearGradient from 'react-native-linear-gradient';
 
-import { View, Text, Image, FlatList, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  ScrollView,
+  ImageBackground
+} from 'react-native';
 
 import Cast from '../../common/Cast';
 import Video from '../../common/Video';
@@ -20,7 +30,12 @@ class MovieDetailScreen extends Component {
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: '' + navigation.getParam('title')
+    // title: '' + navigation.getParam('title'),
+    headerTransparent: true,
+    headerTitleStyle: {
+      color: 'white'
+    },
+    headerTintColor: 'white'
   });
 
   fetchData() {
@@ -34,7 +49,7 @@ class MovieDetailScreen extends Component {
       .then(res => res.json())
       .then(res =>
         this.setState({ data: res, loading: false }, () => {
-          //console.log(res);
+          console.log(res);
         })
       );
   }
@@ -66,7 +81,7 @@ class MovieDetailScreen extends Component {
       .then(res => res.json())
       .then(res =>
         this.setState({ video: res.results, loading: false }, () => {
-          console.log(this.state.video);
+          //console.log(this.state.video);
         })
       );
   }
@@ -79,57 +94,94 @@ class MovieDetailScreen extends Component {
 
   render() {
     return (
-      <View>
-        <View style={{ height: 200 }}>
-          <Image
-            style={{ flex: 1 }}
-            source={{ uri: `${IMAGE_PATH}${this.state.data.backdrop_path}` }}
-          />
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        {/*HEADER CONTAINER*/}
+        <View style={{ flex: 1, backgroundColor: 'red' }}>
+          <ImageBackground
+            resizeMode={'cover'}
+            style={{
+              flex: 1
+            }}
+            source={{
+              uri: `${IMAGE_PATH}${this.state.data.backdrop_path}`
+            }}
+          >
+            <LinearGradient
+              start={{ x: 0.5, y: 0 }}
+              colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View
+                style={{
+                  display: 'flex',
+                  height: '60%',
+                  flexDirection: 'row',
+                  width: '85%'
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <Image
+                    style={{ flex: 1, borderRadius: 15 }}
+                    source={{
+                      uri: `${IMAGE_PATH}${this.state.data.poster_path}`
+                    }}
+                  />
+                </View>
+                <View style={{ flex: 2, marginLeft: 5 }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: 25
+                    }}
+                  >
+                    {this.state.data.title}
+                  </Text>
+                  <Text style={{ color: 'white', fontSize: 20 }}>
+                    {this.state.data.vote_average}
+                  </Text>
+                </View>
+              </View>
+            </LinearGradient>
+          </ImageBackground>
         </View>
 
-        <ScrollView style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <View>
-            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Summary</Text>
-            <Text>{this.state.data.overview}</Text>
-          </View>
-          <View>
-            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Cast</Text>
-            <FlatList
-              data={this.state.cast}
-              renderItem={(item, index) => {
-                return (
-                  <Cast
-                    navigation={this.props.navigation}
-                    image={this.state.data.backdrop_path}
-                    key={item.item.id}
-                    item={item.item}
-                  />
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              horizontal
-            />
-          </View>
-          {/* <View style={{ paddingBottom: 300 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 25 }}>Trailers</Text>
-            <FlatList
-              data={this.state.video}
-              renderItem={(item, index) => {
-                return (
-                  <Video
-                    navigation={this.props.navigation}
-                    key={item.item.id}
-                    item={item.item}
-                  />
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              horizontal
-            />
-          </View> */}
-        </ScrollView>
+        {/*BODY CONTAINER*/}
+        <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
+          <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
+              Summary
+            </Text>
+            <Text style={{ color: 'white' }}>{this.state.data.overview}</Text>
+            <View>
+              <Text
+                style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}
+              >
+                Cast
+              </Text>
+              <FlatList
+                data={this.state.cast}
+                renderItem={(item, index) => {
+                  return (
+                    <Cast
+                      navigation={this.props.navigation}
+                      image={this.state.data.backdrop_path}
+                      key={item.item.id}
+                      item={item.item}
+                    />
+                  );
+                }}
+                keyExtractor={(item, index) => index.toString()}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+              />
+            </View>
+          </ScrollView>
+        </View>
       </View>
     );
   }

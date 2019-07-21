@@ -36,7 +36,9 @@ target 'movie_app' do
 
 
 
-  pod 'react-native-orientation', :path => '../node_modules/react-native-orientation'
+
+
+  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
 
   target 'movie_appTests' do
     inherit! :search_paths
