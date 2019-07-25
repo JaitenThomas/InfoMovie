@@ -19,7 +19,11 @@ import LinearGradient from 'react-native-linear-gradient';
 class CastDetailScreen extends Component {
   state = {
     id: this.props.navigation.getParam('id'),
-    data: {}
+    data: {},
+    age: undefined,
+    birthday: undefined,
+    gender: undefined,
+    knownForDepartment: undefined
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -41,9 +45,15 @@ class CastDetailScreen extends Component {
     fetch(URI)
       .then(res => res.json())
       .then(res =>
-        this.setState({ data: res, loading: false }, () => {
-          console.log(res);
-        })
+        this.setState(
+          { data: res, birthday: res.birthday, loading: false },
+          () => {
+            this.calculateAge(res.birthday);
+            this.formatBirthday(res.birthday);
+            this.formatGender(res.gender);
+            this.formatKnownForDepartment(res.known_for_department);
+          }
+        )
       );
   }
 
@@ -51,7 +61,71 @@ class CastDetailScreen extends Component {
     this.fetchPersonDetails();
   }
 
-  renderStar() {}
+  renderProfileImage() {
+    if (this.state.data.profile_path !== null) {
+      return (
+        <FastImage
+          style={{ flex: 1, borderRadius: 15 }}
+          imageStyle={{ resizeMode: 'center' }}
+          source={{
+            uri: `${IMAGE_PATH}${this.state.data.profile_path}`
+          }}
+        />
+      );
+    } else {
+      return (
+        <FastImage
+          style={{ flex: 1, borderRadius: 15 }}
+          source={require('../images/not_found.png')}
+        />
+      );
+    }
+  }
+
+  formatKnownForDepartment(knownForDepartment) {
+    if (knownForDepartment === null) {
+      this.setState({ knownForDepartment: 'Unknown' });
+    } else {
+      this.setState({ knownForDepartment });
+    }
+  }
+
+  formatGender(gender) {
+    if (gender == 1) {
+      this.setState({ gender: 'Female' });
+    } else if (gender == 2) {
+      this.setState({ gender: 'Male' });
+    } else {
+      this.setState({ gender: 'Unknown' });
+    }
+  }
+
+  formatBirthday(birthday) {
+    if (birthday === null) {
+      this.setState({ birthday: 'Unknown' });
+    } else {
+      var formatedBirthday = birthday.replace(/-/g, '/');
+
+      this.setState({ birthday: formatedBirthday });
+    }
+  }
+
+  calculateAge(birthday) {
+    if (birthday === null) {
+      this.setState({ age: 'Unknown' });
+    } else {
+      var formatedBirthday = new Date(birthday);
+
+      var ageDifMs = Date.now() - formatedBirthday.getTime();
+      var ageDate = new Date(ageDifMs);
+
+      var calculation = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+      this.setState({ age: calculation + ' yo' }, () => {
+        console.log(this.state.age);
+      });
+    }
+  }
 
   render() {
     return (
@@ -84,14 +158,7 @@ class CastDetailScreen extends Component {
                   width: '85%'
                 }}
               >
-                <View style={{ flex: 1 }}>
-                  <FastImage
-                    style={{ flex: 1, borderRadius: 15 }}
-                    source={{
-                      uri: `${IMAGE_PATH}${this.state.data.profile_path}`
-                    }}
-                  />
-                </View>
+                <View style={{ flex: 1 }}>{this.renderProfileImage()}</View>
                 <View
                   style={{
                     flex: 2,
@@ -105,10 +172,11 @@ class CastDetailScreen extends Component {
                     {this.state.data.name}
                   </Text>
                   <Text style={{ color: 'white', fontSize: 20 }}>
-                    {this.state.data.known_for_department || 'unknown'}
+                    {`${this.state.gender} | ` +
+                      this.state.knownForDepartment || 'Unknown'}
                   </Text>
                   <Text style={{ color: 'white', fontSize: 20 }}>
-                    {this.state.data.birthday || 'unknown'}
+                    {this.state.birthday + ` | ${this.state.age}` || 'Unknown'}
                   </Text>
                 </View>
               </View>
@@ -122,7 +190,9 @@ class CastDetailScreen extends Component {
             <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
               Biography
             </Text>
-            <Text style={{ color: 'white' }}>{this.state.data.biography}</Text>
+            <Text style={{ color: 'white' }}>
+              {this.state.data.biography || 'No information provided.'}
+            </Text>
           </ScrollView>
         </View>
       </View>

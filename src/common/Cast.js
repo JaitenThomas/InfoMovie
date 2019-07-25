@@ -6,6 +6,26 @@ const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
 
 class Cast extends Component {
   state = {};
+
+  renderPosterImage() {
+    if (this.props.item.profile_path !== null) {
+      return (
+        <FastImage
+          style={{ width: 100, height: 150, borderRadius: 15 }}
+          source={{ uri: `${IMAGE_PATH}${this.props.item.profile_path}` }}
+        />
+      );
+    } else {
+      return (
+        <FastImage
+          style={{ width: 100, height: 150, borderRadius: 15 }}
+          imageStyle={{ resizeMode: 'center' }}
+          source={require('../images/not_found.png')}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <View style={{ marginRight: 10 }}>
@@ -19,10 +39,7 @@ class Cast extends Component {
             });
           }}
         >
-          <FastImage
-            style={{ width: 100, height: 150, borderRadius: 15 }}
-            source={{ uri: `${IMAGE_PATH}${this.props.item.profile_path}` }}
-          />
+          {this.renderPosterImage()}
           <View style={{ width: 100 }}>
             <Text style={{ color: 'white' }}>{this.props.item.character}</Text>
           </View>

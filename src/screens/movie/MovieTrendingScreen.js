@@ -227,12 +227,12 @@ const styles = {
   sectionTitleStyle: {
     fontSize: 25,
     fontWeight: 'bold',
-    paddingBottom: 5,
+    paddingBottom: 10,
+
     color: 'white'
   },
   rowContainerStyle: {
-    flex: 1,
-    paddingBottom: 5
+    flex: 1
   }
 };
 

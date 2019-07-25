@@ -7,6 +7,28 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 class MoviePoster extends Component {
   state = {};
 
+  renderPosterImage() {
+    if (this.props.item.poster_path !== null) {
+      return (
+        <FastImage
+          style={styles.imageStyle}
+          imageStyle={{ resizeMode: 'center' }}
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${this.props.item.poster_path}`
+          }}
+        />
+      );
+    } else {
+      return (
+        <FastImage
+          style={styles.imageStyle}
+          imageStyle={{ resizeMode: 'center' }}
+          source={require('../images/not_found.png')}
+        />
+      );
+    }
+  }
+
   render() {
     return (
       <View style={styles.mainContainerStyle}>
@@ -19,39 +41,7 @@ class MoviePoster extends Component {
             })
           }
         >
-          <FastImage
-            style={styles.imageStyle}
-            imageStyle={{ resizeMode: 'center' }}
-            source={{
-              uri: `https://image.tmdb.org/t/p/original${
-                this.props.item.poster_path
-              }`
-            }}
-          >
-            {/* <View
-              style={{
-                position: 'absolute',
-                top: 25,
-                paddingLeft: 5
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  width: 75,
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                  flexDirection: 'row'
-                }}
-              >
-                <Icon name="star" size={20} color="white" />
-                <Text style={{ color: 'white', fontSize: 20 }}>
-                  {this.props.item.vote_average}
-                </Text>
-              </View>
-            </View> */}
-          </FastImage>
+          {this.renderPosterImage()}
           <View style={styles.titleContainerStyle}>
             <Text style={{ color: 'white' }}>{this.props.item.title}</Text>
           </View>

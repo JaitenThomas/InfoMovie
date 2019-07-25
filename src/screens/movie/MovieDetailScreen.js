@@ -107,9 +107,17 @@ class MovieDetailScreen extends Component {
     if (this.state.genres.length > 0) {
       return this.state.genres.map((genre, index) => {
         if (index < this.state.genres.length - 1) {
-          return <Text style={{ color: 'white' }}>{genre}/</Text>;
+          return (
+            <Text key={index} style={{ color: 'white' }}>
+              {genre}/
+            </Text>
+          );
         } else {
-          return <Text style={{ color: 'white' }}>{genre}</Text>;
+          return (
+            <Text key={index} style={{ color: 'white' }}>
+              {genre}
+            </Text>
+          );
         }
       });
     }
