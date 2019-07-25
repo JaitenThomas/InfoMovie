@@ -6,13 +6,16 @@ import {
   createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
+  createMaterialTopTabNavigator,
   header
 } from 'react-navigation';
 
 import SearchScreen from './screens/SearchScreen';
 
-import MovieScreen from './screens/movie/MovieScreen';
 import MovieDetailScreen from './screens/movie/MovieDetailScreen';
+import MovieTrendingScreen from './screens/movie/MovieTrendingScreen';
+import MovieGenreScreen from './screens/movie/MovieGenreScreen';
+import MovieGenreDetailScreen from './screens/movie/MovieGenreDetailScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
 
@@ -30,10 +33,31 @@ class App extends Component {
   }
 }
 
+const movieMaterialTopBarNavigator = createMaterialTopTabNavigator(
+  {
+    Trending: {
+      screen: MovieTrendingScreen
+    },
+    Genres: {
+      screen: MovieGenreScreen
+    }
+  },
+  {
+    tabBarOptions: {
+      indicatorStyle: {
+        backgroundColor: 'white'
+      },
+      style: {
+        backgroundColor: '#23272A'
+      }
+    }
+  }
+);
+
 const bottomTabNavigator = createBottomTabNavigator(
   {
     Movie: {
-      screen: MovieScreen,
+      screen: movieMaterialTopBarNavigator,
       navigationOptions: {
         tabBarIcon: TabBarIcon('MaterialCommunityIcon')('movie')(25)
       }
@@ -69,6 +93,7 @@ const bottomTabNavigator = createBottomTabNavigator(
       style: {
         backgroundColor: '#23272A'
       },
+
       activeTintColor: '#FFFFFF'
     }
   }
@@ -80,6 +105,7 @@ const Main = createStackNavigator(
       screen: bottomTabNavigator
     },
     MovieDetailScreen,
+    MovieGenreDetailScreen,
     CastDetailScreen,
     TelevisionDetailScreen
   },

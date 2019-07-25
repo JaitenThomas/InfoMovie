@@ -36,7 +36,6 @@ class TelevisionScreen extends Component {
     fetch(url)
       .then(data => data.json())
       .then(data => {
-        console.log();
         this.setState({
           airingTodayData: data.results,
           error: data.error || null

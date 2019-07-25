@@ -14,7 +14,7 @@ import Poster from '../../movie/MoviePoster';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
-class MovieUpcomingScreen extends Component {
+class MovieTrendingScreen extends Component {
   state = {
     upcomingData: [],
     popularData: [],
@@ -236,4 +236,4 @@ const styles = {
   }
 };
 
-export default MovieUpcomingScreen;
+export default MovieTrendingScreen;
