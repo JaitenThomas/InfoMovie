@@ -28,7 +28,8 @@ class MovieDetailScreen extends Component {
     data: {},
     cast: [],
     video: [],
-    loading: false
+    loading: false,
+    genres: []
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -49,11 +50,17 @@ class MovieDetailScreen extends Component {
 
     fetch(url)
       .then(res => res.json())
-      .then(res =>
-        this.setState({ data: res, loading: false }, () => {
-          console.log(res);
-        })
-      );
+      .then(res => {
+        let genres = [];
+
+        res.genres.forEach(genre => {
+          genres.push(genre.name);
+        });
+
+        this.setState({ data: res, loading: false, genres: genres }, () => {
+          console.log(this.state.genres);
+        });
+      });
   }
 
   fetchCast() {
@@ -82,8 +89,10 @@ class MovieDetailScreen extends Component {
     fetch(url)
       .then(res => res.json())
       .then(res =>
-        this.setState({ video: res.results, loading: false }, () => {
-          //console.log(this.state.video);
+        this.setState({
+          video: res.results,
+          loading: false,
+          genres: res.genres
         })
       );
   }
@@ -91,13 +100,26 @@ class MovieDetailScreen extends Component {
   componentDidMount() {
     this.fetchData();
     this.fetchCast();
-    this.fetchVideo();
+    //this.fetchVideo();
+  }
+
+  renderGenres() {
+    if (this.state.genres.length > 0) {
+      return this.state.genres.map((genre, index) => {
+        if (index < this.state.genres.length - 1) {
+          return <Text style={{ color: 'white' }}>{genre}/</Text>;
+        } else {
+          return <Text style={{ color: 'white' }}>{genre}</Text>;
+        }
+      });
+    }
   }
 
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>
         {/*HEADER CONTAINER*/}
+
         <View style={{ flex: 1, backgroundColor: 'red' }}>
           <ImageBackground
             resizeMode={'cover'}
@@ -133,7 +155,13 @@ class MovieDetailScreen extends Component {
                     }}
                   />
                 </View>
-                <View style={{ flex: 2, marginLeft: 5 }}>
+                <View
+                  style={{
+                    flex: 2,
+                    marginLeft: 5,
+                    justifyContent: 'space-around'
+                  }}
+                >
                   <Text
                     style={{
                       color: 'white',
@@ -146,6 +174,9 @@ class MovieDetailScreen extends Component {
                   <Text style={{ color: 'white', fontSize: 20 }}>
                     {this.state.data.vote_average}
                   </Text>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                    {this.renderGenres()}
+                  </View>
                 </View>
               </View>
             </LinearGradient>
