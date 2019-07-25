@@ -5,9 +5,10 @@ import {
   Image,
   ScrollView,
   ImageBackground,
-  ActivityIndicator,
-  FlatList
+  ActivityIndicator
 } from 'react-native';
+
+import FastImage from 'react-native-fast-image';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 const PERSON_PATH = `https://api.themoviedb.org/3/person/`;
@@ -84,7 +85,7 @@ class CastDetailScreen extends Component {
                 }}
               >
                 <View style={{ flex: 1 }}>
-                  <Image
+                  <FastImage
                     style={{ flex: 1, borderRadius: 15 }}
                     source={{
                       uri: `${IMAGE_PATH}${this.state.data.profile_path}`

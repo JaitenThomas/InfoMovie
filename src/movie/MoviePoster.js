@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-class Poster extends Component {
+class MoviePoster extends Component {
   state = {};
 
   render() {
@@ -77,4 +77,4 @@ const styles = {
   }
 };
 
-export default Poster;
+export default MoviePoster;

@@ -10,34 +10,35 @@ import {
 
 import Carousel from 'react-native-snap-carousel';
 
-import Poster from '../../movie/MoviePoster';
+import Poster from '../../television/TelevisionPoster';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
-class MovieUpcomingScreen extends Component {
+class TelevisionScreen extends Component {
   state = {
-    upcomingData: [],
+    airingTodayData: [],
     popularData: [],
-    nowPlayingData: [],
+    onAirData: [],
     topRated: [],
     error: ''
   };
 
   componentDidMount() {
-    this.fetchUpcomingData();
+    this.fetchAiringTodayData();
     this.fetchPopularData();
-    this.fetchNowPlayingData();
+    this.fetchNowOnAirData();
     this.fetchTopRatedData();
   }
 
-  fetchUpcomingData() {
-    const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US`;
+  fetchAiringTodayData() {
+    const url = `https://api.themoviedb.org/3/tv/airing_today?api_key=${API_KEY}&language=en-US`;
 
     fetch(url)
       .then(data => data.json())
       .then(data => {
+        console.log();
         this.setState({
-          upcomingData: data.results,
+          airingTodayData: data.results,
           error: data.error || null
         });
       })
@@ -47,7 +48,7 @@ class MovieUpcomingScreen extends Component {
   }
 
   fetchPopularData() {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US`;
 
     fetch(url)
       .then(data => data.json())
@@ -62,14 +63,14 @@ class MovieUpcomingScreen extends Component {
       });
   }
 
-  fetchNowPlayingData() {
-    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US`;
+  fetchNowOnAirData() {
+    const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEY}&language=en-US`;
 
     fetch(url)
       .then(data => data.json())
       .then(data => {
         this.setState({
-          nowPlayingData: data.results,
+          onAirData: data.results,
           error: data.error || null
         });
       })
@@ -79,7 +80,7 @@ class MovieUpcomingScreen extends Component {
   }
 
   fetchTopRatedData() {
-    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/tv/top_rated?api_key=${API_KEY}&language=en-US`;
 
     fetch(url)
       .then(data => data.json())
@@ -110,13 +111,13 @@ class MovieUpcomingScreen extends Component {
       <View style={styles.mainContainerStyle}>
         <ScrollView style={styles.scrollContainerStyle}>
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Upcoming</Text>
+            <Text style={styles.sectionTitleStyle}>Airing Today</Text>
 
             <FlatList
               indicatorStyle={'default'}
               horizontal
               showsVerticalScrollIndicator={false}
-              data={this.state.upcomingData}
+              data={this.state.airingTodayData}
               renderItem={(item, index) => {
                 return (
                   <Poster
@@ -160,13 +161,13 @@ class MovieUpcomingScreen extends Component {
           </View>
 
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Now Playing</Text>
+            <Text style={styles.sectionTitleStyle}>On The Air</Text>
 
             <FlatList
               indicatorStyle={'default'}
               horizontal
               showsVerticalScrollIndicator={false}
-              data={this.state.nowPlayingData}
+              data={this.state.onAirData}
               renderItem={(item, index) => {
                 return (
                   <Poster
@@ -236,4 +237,4 @@ const styles = {
   }
 };
 
-export default MovieUpcomingScreen;
+export default TelevisionScreen;

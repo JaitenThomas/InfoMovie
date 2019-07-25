@@ -19,10 +19,10 @@ import FastImage from 'react-native-fast-image';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
-const CAST_PATH = 'http://api.themoviedb.org/3/movie';
-const VIDEO_PATH = 'http://api.themoviedb.org/3/movie';
+const CAST_PATH = 'http://api.themoviedb.org/3/tv';
+const VIDEO_PATH = 'http://api.themoviedb.org/3/tv';
 
-class MovieDetailScreen extends Component {
+class TelevisionDetailScreen extends Component {
   state = {
     id: this.props.navigation.getParam('id'),
     data: {},
@@ -43,55 +43,55 @@ class MovieDetailScreen extends Component {
   fetchData() {
     this.setState({ loading: true });
 
-    const url = `https://api.themoviedb.org/3/movie/${
+    const url = `https://api.themoviedb.org/3/tv/${
       this.state.id
     }?api_key=${API_KEY}`;
 
     fetch(url)
       .then(res => res.json())
-      .then(res =>
+      .then(res => {
         this.setState({ data: res, loading: false }, () => {
-          console.log(res);
-        })
-      );
+          //console.log(res);
+        });
+      });
   }
 
   fetchCast() {
     this.setState({ loading: true });
 
-    const url = `https://api.themoviedb.org/3/movie/${
+    const url = `https://api.themoviedb.org/3/tv/${
       this.state.id
-    }/casts?api_key=${API_KEY}`;
+    }/credits?api_key=${API_KEY}`;
 
     fetch(url)
       .then(res => res.json())
-      .then(res =>
+      .then(res => {
         this.setState({ cast: res.cast, loading: false }, () => {
           //console.log(this.state.cast);
-        })
-      );
+        });
+      });
   }
 
-  fetchVideo() {
-    this.setState({ loading: true });
+  // fetchVideo() {
+  //   this.setState({ loading: true });
 
-    const url = `https://api.themoviedb.org/3/movie/${
-      this.state.id
-    }/videos?api_key=${API_KEY}`;
+  //   const url = `https://api.themoviedb.org/3/tv/${
+  //     this.state.id
+  //   }/videos?api_key=${API_KEY}`;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res =>
-        this.setState({ video: res.results, loading: false }, () => {
-          //console.log(this.state.video);
-        })
-      );
-  }
+  //   fetch(url)
+  //     .then(res => res.json())
+  //     .then(res =>
+  //       this.setState({ video: res.results, loading: false }, () => {
+  //         //console.log(this.state.video);
+  //       })
+  //     );
+  // }
 
   componentDidMount() {
     this.fetchData();
     this.fetchCast();
-    this.fetchVideo();
+    //this.fetchVideo();
   }
 
   render() {
@@ -141,7 +141,7 @@ class MovieDetailScreen extends Component {
                       fontSize: 25
                     }}
                   >
-                    {this.state.data.title}
+                    {this.state.data.original_name}
                   </Text>
                   <Text style={{ color: 'white', fontSize: 20 }}>
                     {this.state.data.vote_average}
@@ -189,4 +189,4 @@ class MovieDetailScreen extends Component {
   }
 }
 
-export default MovieDetailScreen;
+export default TelevisionDetailScreen;

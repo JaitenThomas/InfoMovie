@@ -16,7 +16,8 @@ import MovieDetailScreen from './screens/movie/MovieDetailScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
 
-import TelevisionScreen from './screens/TelevisionScreen';
+import TelevisionScreen from './screens/television/TelevisionScreen';
+import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen';
 
 class App extends Component {
   state = {};
@@ -79,7 +80,8 @@ const Main = createStackNavigator(
       screen: bottomTabNavigator
     },
     MovieDetailScreen,
-    CastDetailScreen
+    CastDetailScreen,
+    TelevisionDetailScreen
   },
   {
     navigationOptions: {
