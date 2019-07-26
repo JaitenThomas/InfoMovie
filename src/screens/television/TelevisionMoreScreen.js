@@ -6,7 +6,7 @@ const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
 import MoviePoster from '../../movie/MoviePoster';
 
-class MovieMoreScreen extends Component {
+class TelevisionMoreScreen extends Component {
   state = {
     data: [],
     page: 1
@@ -31,7 +31,7 @@ class MovieMoreScreen extends Component {
   fetchData() {
     this.setState({ loading: true });
 
-    const url = `https://api.themoviedb.org/3/movie/${this.props.navigation.getParam(
+    const url = `https://api.themoviedb.org/3/tv/${this.props.navigation.getParam(
       'type'
     )}?api_key=${API_KEY}&language=en-US&page=${this.state.page}&with_genres=${
       this.state.id
@@ -43,7 +43,7 @@ class MovieMoreScreen extends Component {
         this.setState(
           { data: [...this.state.data, ...res.results], loading: false },
           () => {
-            console.log(this.state.data);
+            //console.log(this.state.data);
           }
         );
       });
@@ -92,4 +92,4 @@ class MovieMoreScreen extends Component {
   }
 }
 
-export default MovieMoreScreen;
+export default TelevisionMoreScreen;

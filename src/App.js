@@ -20,10 +20,11 @@ import MovieMoreScreen from './screens/movie/MovieMoreScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
 
-import TelevisionScreen from './screens/television/TelevisionScreen';
+import TelevisionTrendingScreen from './screens/television/TelevisionTrendingScreen';
 import TelevisionGenreScreen from './screens/television/TelevisionGenreScreen';
 import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen';
 import TelevisionGenreDetailScreen from './screens/television/TelevisionGenreDetailScreen';
+import TelevisionMoreScreen from './screens/television/TelevisionMoreScreen';
 
 class App extends Component {
   state = {};
@@ -62,7 +63,7 @@ const movieMaterialTopBarNavigator = createMaterialTopTabNavigator(
 const televisionMaterialTopBarNavigator = createMaterialTopTabNavigator(
   {
     Trending: {
-      screen: TelevisionScreen
+      screen: TelevisionTrendingScreen
     },
     Genres: {
       screen: TelevisionGenreScreen
@@ -135,7 +136,8 @@ const Main = createStackNavigator(
     CastDetailScreen,
     TelevisionDetailScreen,
     MovieMoreScreen,
-    TelevisionGenreDetailScreen
+    TelevisionGenreDetailScreen,
+    TelevisionMoreScreen
   },
   {
     navigationOptions: {
