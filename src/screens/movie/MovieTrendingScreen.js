@@ -12,6 +12,8 @@ import Carousel from 'react-native-snap-carousel';
 
 import Poster from '../../movie/MoviePoster';
 
+import Icon from 'react-native-vector-icons/Entypo';
+
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
 class MovieTrendingScreen extends Component {
@@ -31,7 +33,7 @@ class MovieTrendingScreen extends Component {
   }
 
   fetchUpcomingData() {
-    const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`;
 
     fetch(url)
       .then(data => data.json())
@@ -47,7 +49,7 @@ class MovieTrendingScreen extends Component {
   }
 
   fetchPopularData() {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
 
     fetch(url)
       .then(data => data.json())
@@ -63,7 +65,7 @@ class MovieTrendingScreen extends Component {
   }
 
   fetchNowPlayingData() {
-    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
 
     fetch(url)
       .then(data => data.json())
@@ -79,7 +81,7 @@ class MovieTrendingScreen extends Component {
   }
 
   fetchTopRatedData() {
-    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
 
     fetch(url)
       .then(data => data.json())
@@ -110,7 +112,27 @@ class MovieTrendingScreen extends Component {
       <View style={styles.mainContainerStyle}>
         <ScrollView style={styles.scrollContainerStyle}>
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Upcoming</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.sectionTitleStyle}>Upcoming</Text>
+              <Icon.Button
+                name="dots-three-horizontal"
+                backgroundColor="transparent"
+                underlayColor="transparent"
+                onPress={() => {
+                  this.props.navigation.navigate('MovieMoreScreen', {
+                    title: 'Upcoming',
+                    type: 'upcoming'
+                  });
+                }}
+              />
+            </View>
 
             <FlatList
               indicatorStyle={'default'}
@@ -135,7 +157,27 @@ class MovieTrendingScreen extends Component {
           </View>
 
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Popular</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.sectionTitleStyle}>Popular</Text>
+              <Icon.Button
+                name="dots-three-horizontal"
+                backgroundColor="transparent"
+                underlayColor="transparent"
+                onPress={() =>
+                  this.props.navigation.navigate('MovieMoreScreen', {
+                    title: 'Popular',
+                    type: 'popular'
+                  })
+                }
+              />
+            </View>
 
             <FlatList
               indicatorStyle={'default'}
@@ -160,7 +202,27 @@ class MovieTrendingScreen extends Component {
           </View>
 
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Now Playing</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.sectionTitleStyle}>Now Playing</Text>
+              <Icon.Button
+                name="dots-three-horizontal"
+                backgroundColor="transparent"
+                underlayColor="transparent"
+                onPress={() =>
+                  this.props.navigation.navigate('MovieMoreScreen', {
+                    title: 'Now Playing',
+                    type: 'now_playing'
+                  })
+                }
+              />
+            </View>
 
             <FlatList
               indicatorStyle={'default'}
@@ -185,7 +247,27 @@ class MovieTrendingScreen extends Component {
           </View>
 
           <View style={styles.rowContainerStyle}>
-            <Text style={styles.sectionTitleStyle}>Top Rated</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.sectionTitleStyle}>Top Rated</Text>
+              <Icon.Button
+                name="dots-three-horizontal"
+                backgroundColor="transparent"
+                underlayColor="transparent"
+                onPress={() =>
+                  this.props.navigation.navigate('MovieMoreScreen', {
+                    title: 'Top Rated',
+                    type: 'top_rated'
+                  })
+                }
+              />
+            </View>
 
             <FlatList
               indicatorStyle={'default'}

@@ -16,7 +16,7 @@ import Poster from '../../movie/MoviePoster';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
-class MovieGenreScreen extends Component {
+class TelevisionGenreScreen extends Component {
   state = {
     genreData: [],
     error: ''
@@ -27,7 +27,7 @@ class MovieGenreScreen extends Component {
   }
 
   fetchGenreData() {
-    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${API_KEY}&language=en-US`;
+    const url = `https://api.themoviedb.org/3/genre/tv/list?api_key=${API_KEY}&language=en-US`;
 
     fetch(url)
       .then(data => data.json())
@@ -77,10 +77,13 @@ class MovieGenreScreen extends Component {
                 <TouchableOpacity
                   style={{ borderBottomWidth: 1, borderBottomColor: 'white' }}
                   onPress={() =>
-                    this.props.navigation.navigate('MovieGenreDetailScreen', {
-                      id: genre.id,
-                      name: genre.name
-                    })
+                    this.props.navigation.navigate(
+                      'TelevisionGenreDetailScreen',
+                      {
+                        id: genre.id,
+                        name: genre.name
+                      }
+                    )
                   }
                 >
                   <Text style={styles.sectionTitleStyle}>{genre.name}</Text>
@@ -118,4 +121,4 @@ const styles = {
   }
 };
 
-export default MovieGenreScreen;
+export default TelevisionGenreScreen;

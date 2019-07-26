@@ -16,11 +16,14 @@ import MovieDetailScreen from './screens/movie/MovieDetailScreen';
 import MovieTrendingScreen from './screens/movie/MovieTrendingScreen';
 import MovieGenreScreen from './screens/movie/MovieGenreScreen';
 import MovieGenreDetailScreen from './screens/movie/MovieGenreDetailScreen';
+import MovieMoreScreen from './screens/movie/MovieMoreScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
 
 import TelevisionScreen from './screens/television/TelevisionScreen';
+import TelevisionGenreScreen from './screens/television/TelevisionGenreScreen';
 import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen';
+import TelevisionGenreDetailScreen from './screens/television/TelevisionGenreDetailScreen';
 
 class App extends Component {
   state = {};
@@ -33,6 +36,7 @@ class App extends Component {
   }
 }
 
+// Top navigation bar for Movie Screen
 const movieMaterialTopBarNavigator = createMaterialTopTabNavigator(
   {
     Trending: {
@@ -40,6 +44,28 @@ const movieMaterialTopBarNavigator = createMaterialTopTabNavigator(
     },
     Genres: {
       screen: MovieGenreScreen
+    }
+  },
+  {
+    tabBarOptions: {
+      indicatorStyle: {
+        backgroundColor: 'white'
+      },
+      style: {
+        backgroundColor: '#23272A'
+      }
+    }
+  }
+);
+
+// Top navigation bar for Television Screen
+const televisionMaterialTopBarNavigator = createMaterialTopTabNavigator(
+  {
+    Trending: {
+      screen: TelevisionScreen
+    },
+    Genres: {
+      screen: TelevisionGenreScreen
     }
   },
   {
@@ -63,7 +89,7 @@ const bottomTabNavigator = createBottomTabNavigator(
       }
     },
     Television: {
-      screen: TelevisionScreen,
+      screen: televisionMaterialTopBarNavigator,
       navigationOptions: {
         tabBarIcon: TabBarIcon('FontAwesome')('television')(25)
       }
@@ -107,7 +133,9 @@ const Main = createStackNavigator(
     MovieDetailScreen,
     MovieGenreDetailScreen,
     CastDetailScreen,
-    TelevisionDetailScreen
+    TelevisionDetailScreen,
+    MovieMoreScreen,
+    TelevisionGenreDetailScreen
   },
   {
     navigationOptions: {

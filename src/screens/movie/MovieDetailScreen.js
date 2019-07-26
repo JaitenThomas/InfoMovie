@@ -58,7 +58,7 @@ class MovieDetailScreen extends Component {
         });
 
         this.setState({ data: res, loading: false, genres: genres }, () => {
-          console.log(this.state.genres);
+          //console.log(this.state.genres);
         });
       });
   }
