@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  ImageBackground,
-  ActivityIndicator
-} from 'react-native';
+import { View, Text, ScrollView, ImageBackground } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 
@@ -121,9 +114,7 @@ class CastDetailScreen extends Component {
 
       var calculation = Math.abs(ageDate.getUTCFullYear() - 1970);
 
-      this.setState({ age: calculation + ' yo' }, () => {
-        console.log(this.state.age);
-      });
+      this.setState({ age: calculation + ' yo' });
     }
   }
 

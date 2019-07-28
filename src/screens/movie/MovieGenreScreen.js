@@ -1,18 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  ActivityIndicator,
-  Button,
-  ScrollView,
-  TouchableOpacity
-} from 'react-native';
-
-import Carousel from 'react-native-snap-carousel';
-
-import Poster from '../../movie/MoviePoster';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 

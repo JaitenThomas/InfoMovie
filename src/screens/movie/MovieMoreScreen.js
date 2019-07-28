@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
-import MoviePoster from '../../movie/MoviePoster';
+import Poster from '../../common/Poster';
+
+import _ from 'lodash';
 
 class MovieMoreScreen extends Component {
   state = {
@@ -28,7 +30,7 @@ class MovieMoreScreen extends Component {
     headerRight: <View />
   });
 
-  fetchData() {
+  fetchData = () => {
     this.setState({ loading: true });
 
     const url = `https://api.themoviedb.org/3/movie/${this.props.navigation.getParam(
@@ -40,24 +42,35 @@ class MovieMoreScreen extends Component {
     fetch(url)
       .then(res => res.json())
       .then(res => {
-        this.setState(
-          { data: [...this.state.data, ...res.results], loading: false },
-          () => {
-            console.log(this.state.data);
-          }
-        );
+        this.setState({
+          data: [...this.state.data, ...res.results],
+          loading: false
+        });
       });
-  }
+  };
 
   componentDidMount() {
     this.fetchData();
   }
 
-  handleLoadMore() {
+  handleLoadMore = () => {
     this.setState({ page: this.state.page + 1 }, () => {
       this.fetchData();
     });
-  }
+  };
+
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+    return (
+      <View
+        style={{
+          flex: 1
+        }}
+      >
+        <ActivityIndicator animating size={35} />
+      </View>
+    );
+  };
 
   render() {
     return (
@@ -74,17 +87,19 @@ class MovieMoreScreen extends Component {
             numColumns={3}
             renderItem={(item, index) => {
               return (
-                <MoviePoster
+                <Poster
                   navigation={this.props.navigation}
                   key={item.item.id}
                   item={item.item}
+                  type={'movie'}
                 />
               );
             }}
             keyExtractor={(item, index) => index.toString()}
-            onEndReached={() => this.handleLoadMore()}
+            onEndReached={this.handleLoadMore}
             onEndReachedThreshold={0.5}
-            ListFooterComponent={() => <ActivityIndicator />}
+            ListFooterComponent={this.renderFooter}
+            ListFooterComponentStyle={{ height: 40 }}
           />
         </View>
       </View>

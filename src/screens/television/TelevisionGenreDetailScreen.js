@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 
-import {
-  Text,
-  View,
-  ImageBackground,
-  ScrollView,
-  FlatList,
-  ActivityIndicator
-} from 'react-native';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 
-import TelevisionPoster from '../../television/TelevisionPoster';
+import Poster from '../../common/Poster';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
-const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
 
 class TelevisionGenreDetailScreen extends Component {
   state = {
@@ -48,12 +40,10 @@ class TelevisionGenreDetailScreen extends Component {
     fetch(url)
       .then(res => res.json())
       .then(res => {
-        this.setState(
-          { data: [...this.state.data, ...res.results], loading: false },
-          () => {
-            console.log(this.state.data);
-          }
-        );
+        this.setState({
+          data: [...this.state.data, ...res.results],
+          loading: false
+        });
       });
   }
 
@@ -86,7 +76,7 @@ class TelevisionGenreDetailScreen extends Component {
             numColumns={3}
             renderItem={(item, index) => {
               return (
-                <TelevisionPoster
+                <Poster
                   navigation={this.props.navigation}
                   key={item.item.id}
                   item={item.item}

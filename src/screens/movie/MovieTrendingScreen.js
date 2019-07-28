@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  ActivityIndicator,
-  ScrollView
-} from 'react-native';
+import { View, Text, FlatList, ScrollView } from 'react-native';
 
-import Carousel from 'react-native-snap-carousel';
-
-import Poster from '../../movie/MoviePoster';
+import Poster from '../../common/Poster';
 
 import Icon from 'react-native-vector-icons/Entypo';
 
@@ -145,6 +136,7 @@ class MovieTrendingScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'movie'}
                   />
                 );
               }}
@@ -190,6 +182,7 @@ class MovieTrendingScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'movie'}
                   />
                 );
               }}
@@ -235,6 +228,7 @@ class MovieTrendingScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'movie'}
                   />
                 );
               }}
@@ -280,6 +274,7 @@ class MovieTrendingScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'movie'}
                   />
                 );
               }}

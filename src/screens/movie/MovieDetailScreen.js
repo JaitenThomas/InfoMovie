@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
-import YoutubePlayer from 'react-native-yt-player';
-import Youtube from 'react-native-youtube';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {
   View,
   Text,
-  Image,
   FlatList,
   ScrollView,
   ImageBackground
 } from 'react-native';
 
 import Cast from '../../common/Cast';
-import Video from '../../common/Video';
 
 import FastImage from 'react-native-fast-image';
 
@@ -123,6 +119,61 @@ class MovieDetailScreen extends Component {
     }
   }
 
+  renderPoster() {
+    if (this.state.data.poster_path !== null) {
+      return (
+        <FastImage
+          style={{ flex: 1, borderRadius: 15 }}
+          source={{
+            uri: `${IMAGE_PATH}${this.state.data.poster_path}`
+          }}
+        />
+      );
+    } else {
+      return (
+        <FastImage
+          style={{ flex: 1, borderRadius: 15 }}
+          source={require('../../images/not_found.png')}
+        />
+      );
+    }
+  }
+
+  renderCast() {
+    if (this.state.cast <= 0) return null;
+
+    return (
+      <View>
+        <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
+          Cast
+        </Text>
+        <FlatList
+          data={this.state.cast}
+          renderItem={(item, index) => {
+            return (
+              <Cast
+                navigation={this.props.navigation}
+                image={this.state.data.backdrop_path}
+                key={item.item.id}
+                item={item.item}
+              />
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+        />
+      </View>
+    );
+  }
+
+  renderOverview() {
+    if (this.state.data.overview === '')
+      return <Text style={{ color: 'white' }}>No overview found.</Text>;
+
+    return <Text style={{ color: 'white' }}>{this.state.data.overview}</Text>;
+  }
+
   render() {
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -155,14 +206,7 @@ class MovieDetailScreen extends Component {
                   width: '85%'
                 }}
               >
-                <View style={{ flex: 1 }}>
-                  <FastImage
-                    style={{ flex: 1, borderRadius: 15 }}
-                    source={{
-                      uri: `${IMAGE_PATH}${this.state.data.poster_path}`
-                    }}
-                  />
-                </View>
+                <View style={{ flex: 1 }}>{this.renderPoster()}</View>
                 <View
                   style={{
                     flex: 2,
@@ -197,30 +241,8 @@ class MovieDetailScreen extends Component {
             <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
               Summary
             </Text>
-            <Text style={{ color: 'white' }}>{this.state.data.overview}</Text>
-            <View>
-              <Text
-                style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}
-              >
-                Cast
-              </Text>
-              <FlatList
-                data={this.state.cast}
-                renderItem={(item, index) => {
-                  return (
-                    <Cast
-                      navigation={this.props.navigation}
-                      image={this.state.data.backdrop_path}
-                      key={item.item.id}
-                      item={item.item}
-                    />
-                  );
-                }}
-                keyExtractor={(item, index) => index.toString()}
-                showsHorizontalScrollIndicator={false}
-                horizontal
-              />
-            </View>
+            {this.renderOverview()}
+            {this.renderCast()}
           </ScrollView>
         </View>
       </View>

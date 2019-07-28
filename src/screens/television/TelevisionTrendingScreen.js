@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  ActivityIndicator,
-  ScrollView
-} from 'react-native';
+import { View, Text, FlatList, ScrollView } from 'react-native';
 
-import Carousel from 'react-native-snap-carousel';
-
-import Poster from '../../television/TelevisionPoster';
+import Poster from '../../common/Poster';
 import Icon from 'react-native-vector-icons/Entypo';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
@@ -47,22 +38,6 @@ class TelevisionScreen extends Component {
       });
   }
 
-  fetchPopularData() {
-    const url = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1`;
-
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          popularData: data.results,
-          error: data.error || null
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  }
-
   fetchNowOnAirData() {
     const url = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`;
 
@@ -71,6 +46,22 @@ class TelevisionScreen extends Component {
       .then(data => {
         this.setState({
           onAirData: data.results,
+          error: data.error || null
+        });
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+  }
+
+  fetchPopularData() {
+    const url = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1`;
+
+    fetch(url)
+      .then(data => data.json())
+      .then(data => {
+        this.setState({
+          popularData: data.results,
           error: data.error || null
         });
       })
@@ -144,51 +135,7 @@ class TelevisionScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
-                  />
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              showsHorizontalScrollIndicator={false}
-              // onEndReached={this.handleLoadMore}
-              // onEndReachedThreshold={0.1}
-              // ListFooterComponent={<ActivityIndicator size={35} />}
-            />
-          </View>
-
-          <View style={styles.rowContainerStyle}>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}
-            >
-              <Text style={styles.sectionTitleStyle}>Popular</Text>
-              <Icon.Button
-                name="dots-three-horizontal"
-                backgroundColor="transparent"
-                underlayColor="transparent"
-                onPress={() =>
-                  this.props.navigation.navigate('TelevisionMoreScreen', {
-                    title: 'Popular',
-                    type: 'popular'
-                  })
-                }
-              />
-            </View>
-
-            <FlatList
-              indicatorStyle={'default'}
-              horizontal
-              showsVerticalScrollIndicator={false}
-              data={this.state.popularData}
-              renderItem={(item, index) => {
-                return (
-                  <Poster
-                    navigation={this.props.navigation}
-                    key={item.item.id}
-                    item={item.item}
+                    type={'tv'}
                   />
                 );
               }}
@@ -234,6 +181,53 @@ class TelevisionScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'tv'}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+              showsHorizontalScrollIndicator={false}
+              // onEndReached={this.handleLoadMore}
+              // onEndReachedThreshold={0.1}
+              // ListFooterComponent={<ActivityIndicator size={35} />}
+            />
+          </View>
+
+          <View style={styles.rowContainerStyle}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Text style={styles.sectionTitleStyle}>Popular</Text>
+              <Icon.Button
+                name="dots-three-horizontal"
+                backgroundColor="transparent"
+                underlayColor="transparent"
+                onPress={() =>
+                  this.props.navigation.navigate('TelevisionMoreScreen', {
+                    title: 'Popular',
+                    type: 'popular'
+                  })
+                }
+              />
+            </View>
+
+            <FlatList
+              indicatorStyle={'default'}
+              horizontal
+              showsVerticalScrollIndicator={false}
+              data={this.state.popularData}
+              renderItem={(item, index) => {
+                return (
+                  <Poster
+                    navigation={this.props.navigation}
+                    key={item.item.id}
+                    item={item.item}
+                    type={'tv'}
                   />
                 );
               }}
@@ -279,6 +273,7 @@ class TelevisionScreen extends Component {
                     navigation={this.props.navigation}
                     key={item.item.id}
                     item={item.item}
+                    type={'tv'}
                   />
                 );
               }}
