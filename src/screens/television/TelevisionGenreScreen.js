@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+  Text
+} from 'react-native';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
+
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 class TelevisionGenreScreen extends Component {
   state = {
@@ -28,62 +36,41 @@ class TelevisionGenreScreen extends Component {
       });
   }
 
-  fetchMovieData(id) {
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&region=US&sort_by=popularity.desc&page=1&with_genres=${id}`;
+  renderItem = ({ item }, index) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.navigate('TelevisionGenreDetailScreen', {
+            id: item.id,
+            name: item.name
+          });
+        }}
+      >
+        <Text style={styles.sectionTitleStyle}>{item.name}</Text>
+      </TouchableOpacity>
+    );
+  };
 
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          genreData: data.genres
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  }
-
-  // handleLoadMore = () => {
-  //   this.setState(
-  //     {
-  //       page: this.state.page + 1
-  //     },
-  //     () => {
-  //       this.fetchUpcomingData();
-  //     }
-  //   );
-  // };
+  renderSeparator = () => {
+    return <View style={{ height: 1, backgroundColor: 'white' }} />;
+  };
 
   render() {
     return (
       <View style={styles.mainContainerStyle}>
         <ScrollView style={styles.scrollContainerStyle}>
-          {this.state.genreData.map(genre => {
-            return (
-              <View key={genre.id} style={styles.rowContainerStyle}>
-                <TouchableOpacity
-                  style={{ borderBottomWidth: 1, borderBottomColor: 'white' }}
-                  onPress={() =>
-                    this.props.navigation.navigate(
-                      'TelevisionGenreDetailScreen',
-                      {
-                        id: genre.id,
-                        name: genre.name
-                      }
-                    )
-                  }
-                >
-                  <Text style={styles.sectionTitleStyle}>{genre.name}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+          <FlatList
+            data={this.state.genreData}
+            renderItem={this.renderItem}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={item => {
+              return item.id.toString();
+            }}
+          />
         </ScrollView>
       </View>
     );
   }
-}
-{
 }
 
 const styles = {
@@ -97,14 +84,10 @@ const styles = {
     backgroundColor: '#23272A'
   },
   sectionTitleStyle: {
-    fontSize: 25,
+    fontSize: vmin(5),
     fontWeight: 'bold',
     paddingBottom: 5,
     color: 'white'
-  },
-  rowContainerStyle: {
-    flex: 1,
-    paddingBottom: 5
   }
 };
 

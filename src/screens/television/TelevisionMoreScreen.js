@@ -74,34 +74,38 @@ class TelevisionMoreScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#23272A' }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            marginTop: 25
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#23272A'
+        }}
+      >
+        <FlatList
+          contentContainerStyle={{
+            paddingTop: 15
           }}
-        >
-          <FlatList
-            data={this.state.data}
-            numColumns={3}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'tv'}
-                />
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-            ListFooterComponentStyle={{ height: 40 }}
-          />
-        </View>
+          columnWrapperStyle={{
+            justifyContent: 'space-evenly'
+          }}
+          showsVerticalScrollIndicator={false}
+          data={this.state.data}
+          numColumns={3}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'tv'}
+              />
+            );
+          }}
+          keyExtractor={item => item.id}
+          onEndReached={this.handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={this.renderFooter}
+          ListFooterComponentStyle={{ height: 40 }}
+        />
       </View>
     );
   }

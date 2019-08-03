@@ -26,14 +26,12 @@ import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen'
 import TelevisionGenreDetailScreen from './screens/television/TelevisionGenreDetailScreen';
 import TelevisionMoreScreen from './screens/television/TelevisionMoreScreen';
 
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+
 class App extends Component {
   state = {};
   render() {
-    return (
-      <View>
-        <Text>Hello World</Text>
-      </View>
-    );
+    return <View />;
   }
 }
 
@@ -54,6 +52,9 @@ const movieMaterialTopBarNavigator = createMaterialTopTabNavigator(
       },
       style: {
         backgroundColor: '#23272A'
+      },
+      labelStyle: {
+        fontSize: vmin(3)
       }
     }
   }
@@ -76,6 +77,9 @@ const televisionMaterialTopBarNavigator = createMaterialTopTabNavigator(
       },
       style: {
         backgroundColor: '#23272A'
+      },
+      labelStyle: {
+        fontSize: vmin(3)
       }
     }
   }
@@ -86,19 +90,19 @@ const bottomTabNavigator = createBottomTabNavigator(
     Movie: {
       screen: movieMaterialTopBarNavigator,
       navigationOptions: {
-        tabBarIcon: TabBarIcon('MaterialCommunityIcon')('movie')(25)
+        tabBarIcon: TabBarIcon('MaterialCommunityIcon')('movie')(vmin(6))
       }
     },
     Television: {
       screen: televisionMaterialTopBarNavigator,
       navigationOptions: {
-        tabBarIcon: TabBarIcon('FontAwesome')('television')(25)
+        tabBarIcon: TabBarIcon('FontAwesome')('television')(vmin(6))
       }
     },
     Search: {
       screen: SearchScreen,
       navigationOptions: {
-        tabBarIcon: TabBarIcon('FontAwesome')('search')(25)
+        tabBarIcon: TabBarIcon('FontAwesome')('search')(vmin(6))
       }
     }
   },
@@ -108,7 +112,12 @@ const bottomTabNavigator = createBottomTabNavigator(
       return {
         headerTitle: routeName,
         headerTitleStyle: {
-          color: 'white'
+          color: 'white',
+          fontSize: vmin(5),
+          color: 'white',
+          textAlign: 'center',
+          alignSelf: 'center',
+          flex: 1
         },
         headerStyle: {
           backgroundColor: '#23272A'
@@ -118,9 +127,12 @@ const bottomTabNavigator = createBottomTabNavigator(
     },
     tabBarOptions: {
       style: {
-        backgroundColor: '#23272A'
+        backgroundColor: '#23272A',
+        height: vmin(13)
       },
-
+      labelStyle: {
+        fontSize: vmin(3)
+      },
       activeTintColor: '#FFFFFF'
     }
   }

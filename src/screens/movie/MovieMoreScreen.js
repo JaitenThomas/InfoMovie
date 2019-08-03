@@ -8,6 +8,8 @@ import Poster from '../../common/Poster';
 
 import _ from 'lodash';
 
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+
 class MovieMoreScreen extends Component {
   state = {
     data: [],
@@ -24,7 +26,8 @@ class MovieMoreScreen extends Component {
       color: 'white',
       textAlign: 'center',
       alignSelf: 'center',
-      flex: 1
+      flex: 1,
+      fontSize: vmin(5)
     },
     headerTintColor: 'white',
     headerRight: <View />
@@ -74,34 +77,38 @@ class MovieMoreScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#23272A' }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            marginTop: 25
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#23272A'
+        }}
+      >
+        <FlatList
+          contentContainerStyle={{
+            paddingTop: 15
           }}
-        >
-          <FlatList
-            data={this.state.data}
-            numColumns={3}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-            ListFooterComponentStyle={{ height: 40 }}
-          />
-        </View>
+          columnWrapperStyle={{
+            justifyContent: 'space-evenly'
+          }}
+          showsVerticalScrollIndicator={false}
+          data={this.state.data}
+          numColumns={3}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={item => item.id}
+          onEndReached={this.handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={this.renderFooter}
+          ListFooterComponentStyle={{ height: 40 }}
+        />
       </View>
     );
   }

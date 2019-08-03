@@ -63,33 +63,37 @@ class MovieGenreDetailScreen extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: '#23272A' }}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            marginTop: 25
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '#23272A'
+        }}
+      >
+        <FlatList
+          data={this.state.data}
+          numColumns={3}
+          contentContainerStyle={{
+            paddingTop: 15
           }}
-        >
-          <FlatList
-            data={this.state.data}
-            numColumns={3}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={() => this.handleLoadMore()}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={() => this.renderFooterComponent()}
-          />
-        </View>
+          columnWrapperStyle={{
+            justifyContent: 'space-evenly'
+          }}
+          showsVerticalScrollIndicator={false}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          onEndReached={() => this.handleLoadMore()}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={() => this.renderFooterComponent()}
+        />
       </View>
     );
   }

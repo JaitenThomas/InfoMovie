@@ -23,19 +23,18 @@ class SearchScreen extends Component {
 
     fetch(uri)
       .then(res => res.json())
-      .then(res =>
+      .then(res => {
         this.setState(
           { data: [...this.state.data, ...res.results], loading: false },
           () => {
             // console.log(this.state.data[0]);
           }
-        )
-      );
+        );
+      });
   }, 250);
 
   updateSearch = query => {
-    this.setState({ query, loading: true }, () => {
-      console.log(this.state.loading);
+    this.setState({ query, loading: true, data: [] }, () => {
       this.fetchData();
     });
   };
@@ -91,26 +90,24 @@ class SearchScreen extends Component {
           onChangeText={this.updateSearch}
           value={query}
         />
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            marginTop: 15
+        <FlatList
+          contentContainerStyle={{
+            paddingTop: 15
           }}
-        >
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={this.state.data}
-            numColumns={3}
-            renderItem={(item, index) => this.renderItem(item.item, index)}
-            keyExtractor={(item, index) => index.toString()}
-            showsHorizontalScrollIndicator={false}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-            ListFooterComponentStyle={{ height: 40 }}
-          />
-        </View>
+          columnWrapperStyle={{
+            justifyContent: 'space-evenly'
+          }}
+          showsVerticalScrollIndicator={false}
+          data={this.state.data}
+          numColumns={3}
+          renderItem={(item, index) => this.renderItem(item.item, index)}
+          keyExtractor={(item, index) => index.toString()}
+          showsHorizontalScrollIndicator={false}
+          onEndReached={this.handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={this.renderFooter}
+          ListFooterComponentStyle={{ height: 40 }}
+        />
       </View>
     );
   }
