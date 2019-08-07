@@ -51,6 +51,8 @@ class TelevisionDetailScreen extends Component {
           genres.push(genre.name);
         });
 
+        console.log(res);
+
         this.setState({ data: res, loading: false, genres: genres });
       });
   }
@@ -214,7 +216,7 @@ class TelevisionDetailScreen extends Component {
                       fontSize: 25
                     }}
                   >
-                    {this.state.data.original_name}
+                    {this.state.data.name}
                   </Text>
                   <Text style={{ color: 'white', fontSize: 20 }}>
                     {this.state.data.vote_average}

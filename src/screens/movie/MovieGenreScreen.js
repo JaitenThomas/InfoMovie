@@ -36,17 +36,6 @@ class MovieGenreScreen extends Component {
       });
   }
 
-  // handleLoadMore = () => {
-  //   this.setState(
-  //     {
-  //       page: this.state.page + 1
-  //     },
-  //     () => {
-  //       this.fetchUpcomingData();
-  //     }
-  //   );
-  // };
-
   renderItem = ({ item }, index) => {
     return (
       <TouchableOpacity

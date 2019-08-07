@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator
+} from 'react-native';
 
 import Poster from '../../common/Poster';
 
@@ -15,280 +22,229 @@ class MovieTrendingScreen extends Component {
     popularData: [],
     nowPlayingData: [],
     topRatedData: [],
-    error: ''
+    error: '',
+    loading: true
   };
 
   componentDidMount() {
-    this.fetchUpcomingData();
-    this.fetchPopularData();
-    this.fetchNowPlayingData();
-    this.fetchTopRatedData();
+    this.fetchData();
+    // this.fetchUpcomingData();
+    // this.fetchPopularData();
+    // this.fetchNowPlayingData();
+    // this.fetchTopRatedData();
   }
 
-  fetchUpcomingData() {
-    const url = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`;
+  async fetchData() {
+    const upcomingURL = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`;
+    const popularURL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+    const nowPlayingURL = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
+    const topRatedURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
 
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          upcomingData: data.results,
-          error: data.error || null
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
+    const upcomingData = await fetch(upcomingURL);
+    const popularData = await fetch(popularURL);
+    const nowPlayingData = await fetch(nowPlayingURL);
+    const topRatedData = await fetch(topRatedURL);
+
+    const upcomingJson = await upcomingData.json();
+    const popularJson = await popularData.json();
+    const nowPlayingJson = await nowPlayingData.json();
+    const topRatedJson = await topRatedData.json();
+
+    this.setState({
+      upcomingData: upcomingJson.results,
+      popularData: popularJson.results,
+      nowPlayingData: nowPlayingJson.results,
+      topRatedData: topRatedJson.results,
+      loading: false
+    });
   }
 
-  fetchPopularData() {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+  renderLoading() {
+    return this.state.loading ? (
+      <ActivityIndicator size={vmin(10)} />
+    ) : (
+      <ScrollView style={styles.scrollContainerStyle}>
+        <View style={styles.sectionHeaderStyle}>
+          <Text style={styles.sectionHeaderTitleStyle}>Upcoming</Text>
+          <Icon.Button
+            style={styles.sectionHeaderIconStyle}
+            size={vmin(6)}
+            name="dots-three-horizontal"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            onPress={() => {
+              this.props.navigation.navigate('MovieMoreScreen', {
+                title: 'Upcoming',
+                type: 'upcoming'
+              });
+            }}
+          />
+        </View>
 
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          popularData: data.results,
-          error: data.error || null
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
+        <FlatList
+          contentContainerStyle={{
+            paddingRight: 10,
+            marginTop: 5
+          }}
+          ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
+          indicatorStyle={'default'}
+          horizontal
+          showsVerticalScrollIndicator={false}
+          data={this.state.upcomingData}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={item => {
+            return item.id.toString();
+          }}
+          showsHorizontalScrollIndicator={false}
+        />
+
+        <View style={styles.sectionHeaderStyle}>
+          <Text style={styles.sectionHeaderTitleStyle}>Popular</Text>
+          <Icon.Button
+            style={styles.sectionHeaderIconStyle}
+            size={vmin(6)}
+            name="dots-three-horizontal"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            onPress={() => {
+              this.props.navigation.navigate('MovieMoreScreen', {
+                title: 'Popular',
+                type: 'popular'
+              });
+            }}
+          />
+        </View>
+
+        <FlatList
+          contentContainerStyle={{
+            paddingRight: 10,
+            marginTop: 5
+          }}
+          ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
+          indicatorStyle={'default'}
+          horizontal
+          showsVerticalScrollIndicator={false}
+          data={this.state.popularData}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={item => {
+            return item.id.toString();
+          }}
+          showsHorizontalScrollIndicator={false}
+        />
+
+        <View style={styles.sectionHeaderStyle}>
+          <Text style={styles.sectionHeaderTitleStyle}>Now Playing</Text>
+          <Icon.Button
+            style={styles.sectionHeaderIconStyle}
+            size={vmin(6)}
+            name="dots-three-horizontal"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            onPress={() => {
+              this.props.navigation.navigate('MovieMoreScreen', {
+                title: 'Now Playing',
+                type: 'now_playing'
+              });
+            }}
+          />
+        </View>
+
+        <FlatList
+          contentContainerStyle={{
+            paddingRight: 10,
+            marginTop: 5
+          }}
+          ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
+          indicatorStyle={'default'}
+          horizontal
+          showsVerticalScrollIndicator={false}
+          data={this.state.nowPlayingData}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={item => {
+            return item.id.toString();
+          }}
+          showsHorizontalScrollIndicator={false}
+          // onEndReached={this.handleLoadMore}
+          // onEndReachedThreshold={0.1}
+          // ListFooterComponent={<ActivityIndicator size={35} />}
+        />
+
+        <View style={styles.sectionHeaderStyle}>
+          <Text style={styles.sectionHeaderTitleStyle}>Top Rated</Text>
+          <Icon.Button
+            style={styles.sectionHeaderIconStyle}
+            size={vmin(6)}
+            name="dots-three-horizontal"
+            backgroundColor="transparent"
+            underlayColor="transparent"
+            onPress={() => {
+              this.props.navigation.navigate('MovieMoreScreen', {
+                title: 'Top Rated',
+                type: 'top_rated'
+              });
+            }}
+          />
+        </View>
+
+        <FlatList
+          contentContainerStyle={{
+            paddingRight: 10,
+            marginTop: 5
+          }}
+          ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
+          indicatorStyle={'default'}
+          horizontal
+          showsVerticalScrollIndicator={false}
+          data={this.state.topRatedData}
+          renderItem={(item, index) => {
+            return (
+              <Poster
+                navigation={this.props.navigation}
+                key={item.item.id}
+                item={item.item}
+                type={'movie'}
+              />
+            );
+          }}
+          keyExtractor={item => {
+            return item.id.toString();
+          }}
+          showsHorizontalScrollIndicator={false}
+        />
+      </ScrollView>
+    );
   }
-
-  fetchNowPlayingData() {
-    const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
-
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          nowPlayingData: data.results,
-          error: data.error || null
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  }
-
-  fetchTopRatedData() {
-    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
-
-    fetch(url)
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          topRatedData: data.results,
-          error: data.error || null
-        });
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-  }
-
-  // handleLoadMore = () => {
-  //   this.setState(
-  //     {
-  //       page: this.state.page + 1
-  //     },
-  //     () => {
-  //       this.fetchUpcomingData();
-  //     }
-  //   );
-  // };
 
   render() {
     return (
-      <View style={styles.mainContainerStyle}>
-        <ScrollView style={styles.scrollContainerStyle}>
-          <View style={styles.sectionHeaderStyle}>
-            <Text style={styles.sectionHeaderTitleStyle}>Upcoming</Text>
-            <Icon.Button
-              style={styles.sectionHeaderIconStyle}
-              size={vmin(6)}
-              name="dots-three-horizontal"
-              backgroundColor="transparent"
-              underlayColor="transparent"
-              onPress={() => {
-                this.props.navigation.navigate('MovieMoreScreen', {
-                  title: 'Upcoming',
-                  type: 'upcoming'
-                });
-              }}
-            />
-          </View>
-
-          <FlatList
-            contentContainerStyle={{
-              paddingRight: 10,
-              marginTop: 5
-            }}
-            ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
-            indicatorStyle={'default'}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            data={this.state.upcomingData}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={item => {
-              return item.id.toString();
-            }}
-            showsHorizontalScrollIndicator={false}
-            // onEndReached={this.handleLoadMore}
-            // onEndReachedThreshold={0.1}
-            // ListFooterComponent={<ActivityIndicator size={35} />}
-          />
-
-          <View style={styles.sectionHeaderStyle}>
-            <Text style={styles.sectionHeaderTitleStyle}>Popular</Text>
-            <Icon.Button
-              style={styles.sectionHeaderIconStyle}
-              size={vmin(6)}
-              name="dots-three-horizontal"
-              backgroundColor="transparent"
-              underlayColor="transparent"
-              onPress={() => {
-                this.props.navigation.navigate('MovieMoreScreen', {
-                  title: 'Popular',
-                  type: 'popular'
-                });
-              }}
-            />
-          </View>
-
-          <FlatList
-            contentContainerStyle={{
-              paddingRight: 10,
-              marginTop: 5
-            }}
-            ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
-            indicatorStyle={'default'}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            data={this.state.popularData}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={item => {
-              return item.id.toString();
-            }}
-            showsHorizontalScrollIndicator={false}
-            // onEndReached={this.handleLoadMore}
-            // onEndReachedThreshold={0.1}
-            // ListFooterComponent={<ActivityIndicator size={35} />}
-          />
-
-          <View style={styles.sectionHeaderStyle}>
-            <Text style={styles.sectionHeaderTitleStyle}>Now Playing</Text>
-            <Icon.Button
-              style={styles.sectionHeaderIconStyle}
-              size={vmin(6)}
-              name="dots-three-horizontal"
-              backgroundColor="transparent"
-              underlayColor="transparent"
-              onPress={() => {
-                this.props.navigation.navigate('MovieMoreScreen', {
-                  title: 'Now Playing',
-                  type: 'now_playing'
-                });
-              }}
-            />
-          </View>
-
-          <FlatList
-            contentContainerStyle={{
-              paddingRight: 10,
-              marginTop: 5
-            }}
-            ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
-            indicatorStyle={'default'}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            data={this.state.nowPlayingData}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={item => {
-              return item.id.toString();
-            }}
-            showsHorizontalScrollIndicator={false}
-            // onEndReached={this.handleLoadMore}
-            // onEndReachedThreshold={0.1}
-            // ListFooterComponent={<ActivityIndicator size={35} />}
-          />
-
-          <View style={styles.sectionHeaderStyle}>
-            <Text style={styles.sectionHeaderTitleStyle}>Top Rated</Text>
-            <Icon.Button
-              style={styles.sectionHeaderIconStyle}
-              size={vmin(6)}
-              name="dots-three-horizontal"
-              backgroundColor="transparent"
-              underlayColor="transparent"
-              onPress={() => {
-                this.props.navigation.navigate('MovieMoreScreen', {
-                  title: 'Top Rated',
-                  type: 'top_rated'
-                });
-              }}
-            />
-          </View>
-
-          <FlatList
-            contentContainerStyle={{
-              paddingRight: 10,
-              marginTop: 5
-            }}
-            ItemSeparatorComponent={() => <View style={{ marginRight: 5 }} />}
-            indicatorStyle={'default'}
-            horizontal
-            showsVerticalScrollIndicator={false}
-            data={this.state.topRatedData}
-            renderItem={(item, index) => {
-              return (
-                <Poster
-                  navigation={this.props.navigation}
-                  key={item.item.id}
-                  item={item.item}
-                  type={'movie'}
-                />
-              );
-            }}
-            keyExtractor={item => {
-              return item.id.toString();
-            }}
-            showsHorizontalScrollIndicator={false}
-            // onEndReached={this.handleLoadMore}
-            // onEndReachedThreshold={0.1}
-            // ListFooterComponent={<ActivityIndicator size={35} />}
-          />
-        </ScrollView>
-      </View>
+      <View style={styles.mainContainerStyle}>{this.renderLoading()}</View>
     );
   }
 }
@@ -297,6 +253,7 @@ const styles = {
   mainContainerStyle: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#23272A'
   },
   scrollContainerStyle: {

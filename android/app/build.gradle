@@ -40,7 +40,7 @@ import com.android.build.OutputFile
  *   // whether to disable dev mode in custom build variants (by default only disabled in release)
  *   // for example: to disable dev mode in the staging build type (if configured)
  *   devDisabledInStaging: true,
- *   // The configuration property can be in the following formats
+ *   // The configuration property can be in the following formatsrea
  *   //         'devDisabledIn${productFlavor}${buildType}'
  *   //         'devDisabledIn${buildType}'
  *

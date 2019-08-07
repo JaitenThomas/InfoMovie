@@ -24,12 +24,10 @@ class SearchScreen extends Component {
     fetch(uri)
       .then(res => res.json())
       .then(res => {
-        this.setState(
-          { data: [...this.state.data, ...res.results], loading: false },
-          () => {
-            // console.log(this.state.data[0]);
-          }
-        );
+        this.setState({
+          data: [...this.state.data, ...res.results],
+          loading: false
+        });
       });
   }, 250);
 
