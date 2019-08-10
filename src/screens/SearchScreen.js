@@ -87,6 +87,11 @@ class SearchScreen extends Component {
           placeholder="Type here..."
           onChangeText={this.updateSearch}
           value={query}
+          onEndEditing={() => {
+            if (this.state.query == '') {
+              this.setState({ loading: false, data: [] });
+            }
+          }}
         />
         <FlatList
           contentContainerStyle={{
