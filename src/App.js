@@ -15,7 +15,7 @@ import SearchScreen from './screens/SearchScreen';
 import MovieDetailScreen from './screens/movie/MovieDetailScreen';
 import MovieTrendingScreen from './screens/movie/MovieTrendingScreen';
 import MovieGenreScreen from './screens/movie/MovieGenreScreen';
-import MovieGenreDetailScreen from './screens/movie/MovieGenreDetailScreen';
+import MovieGenreMoreScreen from './screens/movie/MovieGenreMoreScreen';
 import MovieMoreScreen from './screens/movie/MovieMoreScreen';
 
 import CastDetailScreen from './common/CastDetailScreen';
@@ -23,7 +23,7 @@ import CastDetailScreen from './common/CastDetailScreen';
 import TelevisionTrendingScreen from './screens/television/TelevisionTrendingScreen';
 import TelevisionGenreScreen from './screens/television/TelevisionGenreScreen';
 import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen';
-import TelevisionGenreDetailScreen from './screens/television/TelevisionGenreDetailScreen';
+import TelevisionGenreMoreScreen from './screens/television/TelevisionGenreMoreScreen';
 import TelevisionMoreScreen from './screens/television/TelevisionMoreScreen';
 
 import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
@@ -144,11 +144,11 @@ const Main = createStackNavigator(
       screen: bottomTabNavigator
     },
     MovieDetailScreen,
-    MovieGenreDetailScreen,
+    MovieGenreMoreScreen,
     CastDetailScreen,
     TelevisionDetailScreen,
     MovieMoreScreen,
-    TelevisionGenreDetailScreen,
+    TelevisionGenreMoreScreen,
     TelevisionMoreScreen
   },
   {

@@ -8,7 +8,7 @@ import Poster from '../../common/Poster';
 
 import _ from 'lodash';
 
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { vmin } from 'react-native-expo-viewport-units';
 
 class MovieMoreScreen extends Component {
   state = {
@@ -57,9 +57,11 @@ class MovieMoreScreen extends Component {
   }
 
   handleLoadMore = () => {
-    this.setState({ page: this.state.page + 1 }, () => {
-      this.fetchData();
-    });
+    if (this.state.loading == false) {
+      this.setState({ page: this.state.page + 1 }, () => {
+        this.fetchData();
+      });
+    }
   };
 
   renderFooter = () => {
@@ -75,6 +77,19 @@ class MovieMoreScreen extends Component {
     );
   };
 
+  renderItem(item, index) {
+    return (
+      <View style={{ margin: 5 }}>
+        <Poster
+          navigation={this.props.navigation}
+          key={item.id}
+          item={item}
+          type={'movie'}
+        />
+      </View>
+    );
+  }
+
   render() {
     return (
       <View
@@ -85,24 +100,13 @@ class MovieMoreScreen extends Component {
       >
         <FlatList
           contentContainerStyle={{
-            paddingTop: 15
-          }}
-          columnWrapperStyle={{
-            justifyContent: 'space-evenly'
+            paddingTop: 15,
+            alignSelf: 'center'
           }}
           showsVerticalScrollIndicator={false}
           data={this.state.data}
           numColumns={3}
-          renderItem={(item, index) => {
-            return (
-              <Poster
-                navigation={this.props.navigation}
-                key={item.item.id}
-                item={item.item}
-                type={'movie'}
-              />
-            );
-          }}
+          renderItem={(item, index) => this.renderItem(item.item, index)}
           keyExtractor={item => item.id}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0.1}

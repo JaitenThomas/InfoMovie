@@ -54,9 +54,11 @@ class TelevisionMoreScreen extends Component {
   }
 
   handleLoadMore = () => {
-    this.setState({ page: this.state.page + 1 }, () => {
-      this.fetchData();
-    });
+    if (this.state.loading == false) {
+      this.setState({ page: this.state.page + 1 }, () => {
+        this.fetchData();
+      });
+    }
   };
 
   renderFooter = () => {
@@ -72,6 +74,19 @@ class TelevisionMoreScreen extends Component {
     );
   };
 
+  renderItem(item, index) {
+    return (
+      <View style={{ margin: 5 }}>
+        <Poster
+          navigation={this.props.navigation}
+          key={item.id}
+          item={item}
+          type={'tv'}
+        />
+      </View>
+    );
+  }
+
   render() {
     return (
       <View
@@ -82,24 +97,13 @@ class TelevisionMoreScreen extends Component {
       >
         <FlatList
           contentContainerStyle={{
-            paddingTop: 15
-          }}
-          columnWrapperStyle={{
-            justifyContent: 'space-evenly'
+            paddingTop: 15,
+            alignSelf: 'center'
           }}
           showsVerticalScrollIndicator={false}
           data={this.state.data}
           numColumns={3}
-          renderItem={(item, index) => {
-            return (
-              <Poster
-                navigation={this.props.navigation}
-                key={item.item.id}
-                item={item.item}
-                type={'tv'}
-              />
-            );
-          }}
+          renderItem={(item, index) => this.renderItem(item.item, index)}
           keyExtractor={item => item.id}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0.1}

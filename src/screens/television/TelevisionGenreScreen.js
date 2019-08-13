@@ -40,7 +40,7 @@ class TelevisionGenreScreen extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.props.navigation.navigate('TelevisionGenreDetailScreen', {
+          this.props.navigation.navigate('TelevisionGenreMoreScreen', {
             id: item.id,
             name: item.name
           });

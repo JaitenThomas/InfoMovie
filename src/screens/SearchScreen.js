@@ -8,15 +8,18 @@ const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
 import _ from 'lodash';
 
+import { vmin } from 'react-native-expo-viewport-units';
+
 class SearchScreen extends Component {
   state = {
     query: '',
     data: [],
     page: 1,
-    loading: false
+    loading: false,
+    error: ''
   };
 
-  fetchData = _.debounce(() => {
+  fetchData = () => {
     const uri = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=en-US&query=${
       this.state.query
     }&page=${this.state.page}&include_adult=false`;
@@ -24,48 +27,79 @@ class SearchScreen extends Component {
     fetch(uri)
       .then(res => res.json())
       .then(res => {
+        if (res.errors !== undefined && res.errors.length > 0) {
+          const message = 'No input provided';
+
+          return this.setState({ error: message });
+        }
+
+        if (res.results !== undefined && res.results.length <= 0) {
+          const message = 'No more data found';
+
+          return this.setState({ error: message });
+        }
+
         this.setState({
           data: [...this.state.data, ...res.results],
-          loading: false
+          loading: false,
+          error: ''
         });
       });
-  }, 250);
+  };
 
-  updateSearch = query => {
-    this.setState({ query, loading: true, data: [] }, () => {
+  updateSearch = () => {
+    this.setState({ data: [], error: '', page: 1 }, () => {
       this.fetchData();
     });
   };
 
+  updateText = query => {
+    this.setState({ query, date: [] });
+  };
+
   handleLoadMore = () => {
-    this.setState({ page: this.state.page + 1, loading: true }, () => {
-      this.fetchData();
-    });
+    if (this.state.loading == false) {
+      this.setState({ page: this.state.page + 1, loading: true }, () => {
+        this.fetchData();
+      });
+    }
   };
 
   renderItem(item, index) {
     if (item.media_type == 'movie') {
       return (
-        <Poster
-          navigation={this.props.navigation}
-          key={item.id}
-          item={item}
-          type={'movie'}
-        />
+        <View style={{ margin: 5 }}>
+          <Poster
+            navigation={this.props.navigation}
+            key={item.id}
+            item={item}
+            type={'movie'}
+          />
+        </View>
       );
     } else if (item.media_type == 'tv') {
       return (
-        <Poster
-          navigation={this.props.navigation}
-          key={item.id}
-          item={item}
-          type={'tv'}
-        />
+        <View style={{ margin: 5 }}>
+          <Poster
+            navigation={this.props.navigation}
+            key={item.id}
+            item={item}
+            type={'tv'}
+          />
+        </View>
       );
     }
   }
 
   renderFooter = () => {
+    if (this.state.error) {
+      return (
+        <Text style={{ color: 'white', fontSize: vmin(5) }}>
+          {this.state.error}
+        </Text>
+      );
+    }
+
     if (!this.state.loading) return null;
     return (
       <View
@@ -85,31 +119,28 @@ class SearchScreen extends Component {
       <View style={{ flex: 1, backgroundColor: '#23272A' }}>
         <SearchBar
           placeholder="Type here..."
-          onChangeText={this.updateSearch}
+          onChangeText={this.updateText}
           value={query}
-          onEndEditing={() => {
-            if (this.state.query == '') {
-              this.setState({ loading: false, data: [] });
-            }
-          }}
+          onEndEditing={this.updateSearch}
         />
         <FlatList
           contentContainerStyle={{
-            paddingTop: 15
-          }}
-          columnWrapperStyle={{
-            justifyContent: 'space-evenly'
+            paddingTop: 15,
+            alignSelf: 'center'
           }}
           showsVerticalScrollIndicator={false}
           data={this.state.data}
           numColumns={3}
           renderItem={(item, index) => this.renderItem(item.item, index)}
           keyExtractor={(item, index) => index.toString()}
-          showsHorizontalScrollIndicator={false}
           onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.1}
           ListFooterComponent={this.renderFooter}
-          ListFooterComponentStyle={{ height: 40 }}
+          ListFooterComponentStyle={{
+            height: 40,
+            alignItems: 'center'
+          }}
+          windowSize={5}
         />
       </View>
     );
