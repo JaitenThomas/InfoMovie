@@ -6,12 +6,15 @@ import {
   Text,
   FlatList,
   ScrollView,
-  ImageBackground
+  ImageBackground,
+  ActivityIndicator
 } from 'react-native';
 
 import Cast from '../../common/Cast';
 
 import FastImage from 'react-native-fast-image';
+
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
@@ -37,66 +40,40 @@ class MovieDetailScreen extends Component {
     headerTintColor: 'white'
   });
 
-  fetchData() {
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData() {
     this.setState({ loading: true });
 
-    const url = `https://api.themoviedb.org/3/movie/${
+    const movieURI = `https://api.themoviedb.org/3/movie/${
       this.state.id
     }?api_key=${API_KEY}`;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        let genres = [];
-
-        res.genres.forEach(genre => {
-          genres.push(genre.name);
-        });
-
-        this.setState({ data: res, loading: false, genres: genres }, () => {
-          //console.log(this.state.genres);
-        });
-      });
-  }
-
-  fetchCast() {
-    this.setState({ loading: true });
-
-    const url = `https://api.themoviedb.org/3/movie/${
+    const castURI = `https://api.themoviedb.org/3/movie/${
       this.state.id
     }/casts?api_key=${API_KEY}`;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res =>
-        this.setState({ cast: res.cast, loading: false }, () => {
-          //console.log(this.state.cast);
-        })
-      );
-  }
+    const movieData = await fetch(movieURI);
+    const castData = await fetch(castURI);
 
-  fetchVideo() {
-    this.setState({ loading: true });
+    const movieJson = await movieData.json();
+    const castJson = await castData.json();
 
-    const url = `https://api.themoviedb.org/3/movie/${
-      this.state.id
-    }/videos?api_key=${API_KEY}`;
+    let genres = [];
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res =>
-        this.setState({
-          video: res.results,
-          loading: false,
-          genres: res.genres
-        })
-      );
-  }
+    movieJson.genres.forEach(genre => {
+      genres.push(genre.name);
+    });
 
-  componentDidMount() {
-    this.fetchData();
-    this.fetchCast();
-    //this.fetchVideo();
+    this.setState({
+      cast: castJson.cast,
+      data: movieJson,
+      movieData: movieJson.results,
+      genres: genres,
+      loading: false
+    });
   }
 
   renderGenres() {
@@ -174,80 +151,103 @@ class MovieDetailScreen extends Component {
     return <Text style={{ color: 'white' }}>{this.state.data.overview}</Text>;
   }
 
-  render() {
-    return (
-      <View style={{ flex: 1, flexDirection: 'column' }}>
-        {/*HEADER CONTAINER*/}
+  renderLoading() {
+    if (this.state.loading == true) {
+      return (
+        <View style={styles.loadingContainerStyle}>
+          <ActivityIndicator size={vmin(10)} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          {/*HEADER CONTAINER*/}
 
-        <View style={{ flex: 1, backgroundColor: 'red' }}>
-          <ImageBackground
-            resizeMode={'cover'}
-            style={{
-              flex: 1
-            }}
-            source={{
-              uri: `${IMAGE_PATH}${this.state.data.backdrop_path}`
-            }}
-          >
-            <LinearGradient
-              start={{ x: 0.5, y: 0 }}
-              colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
+          <View style={{ flex: 1, backgroundColor: '#2C2F33' }}>
+            <ImageBackground
+              resizeMode={'cover'}
               style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
+                flex: 1
+              }}
+              source={{
+                uri: `${IMAGE_PATH}${this.state.data.backdrop_path}`
               }}
             >
-              <View
+              <LinearGradient
+                start={{ x: 0.5, y: 0 }}
+                colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
                 style={{
-                  display: 'flex',
-                  height: '60%',
-                  flexDirection: 'row',
-                  width: '85%'
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <View style={{ flex: 1 }}>{this.renderPoster()}</View>
                 <View
                   style={{
-                    flex: 2,
-                    marginLeft: 5,
-                    justifyContent: 'space-around'
+                    display: 'flex',
+                    height: '60%',
+                    flexDirection: 'row',
+                    width: '85%'
                   }}
                 >
-                  <Text
+                  <View style={{ flex: 1 }}>{this.renderPoster()}</View>
+                  <View
                     style={{
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: 25
+                      flex: 2,
+                      marginLeft: 5,
+                      justifyContent: 'space-around'
                     }}
                   >
-                    {this.state.data.title}
-                  </Text>
-                  <Text style={{ color: 'white', fontSize: 20 }}>
-                    {this.state.data.vote_average}
-                  </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {this.renderGenres()}
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: 25
+                      }}
+                    >
+                      {this.state.data.title}
+                    </Text>
+                    <Text style={{ color: 'white', fontSize: 20 }}>
+                      {this.state.data.vote_average}
+                    </Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                      {this.renderGenres()}
+                    </View>
                   </View>
                 </View>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
-        </View>
+              </LinearGradient>
+            </ImageBackground>
+          </View>
 
-        {/*BODY CONTAINER*/}
-        <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
-          <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
-              Summary
-            </Text>
-            {this.renderOverview()}
-            {this.renderCast()}
-          </ScrollView>
+          {/*BODY CONTAINER*/}
+          <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
+            <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
+              <Text
+                style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}
+              >
+                Summary
+              </Text>
+              {this.renderOverview()}
+              {this.renderCast()}
+            </ScrollView>
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
+  }
+
+  render() {
+    return <View style={{ flex: 1 }}>{this.renderLoading()}</View>;
   }
 }
+
+const styles = {
+  loadingContainerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C2F33'
+  }
+};
 
 export default MovieDetailScreen;

@@ -23,27 +23,25 @@ class MovieTrendingScreen extends Component {
     nowPlayingData: [],
     topRatedData: [],
     error: '',
-    loading: true
+    loading: false
   };
 
   componentDidMount() {
     this.fetchData();
-    // this.fetchUpcomingData();
-    // this.fetchPopularData();
-    // this.fetchNowPlayingData();
-    // this.fetchTopRatedData();
   }
 
   async fetchData() {
-    const upcomingURL = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`;
-    const popularURL = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-    const nowPlayingURL = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
-    const topRatedURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
+    this.setState({ loading: true });
 
-    const upcomingData = await fetch(upcomingURL);
-    const popularData = await fetch(popularURL);
-    const nowPlayingData = await fetch(nowPlayingURL);
-    const topRatedData = await fetch(topRatedURL);
+    const upcomingURI = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`;
+    const popularURI = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+    const nowPlayingURI = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
+    const topRatedURI = `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`;
+
+    const upcomingData = await fetch(upcomingURI);
+    const popularData = await fetch(popularURI);
+    const nowPlayingData = await fetch(nowPlayingURI);
+    const topRatedData = await fetch(topRatedURI);
 
     const upcomingJson = await upcomingData.json();
     const popularJson = await popularData.json();

@@ -39,6 +39,8 @@ target 'movie_app' do
 
 
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'movie_appTests' do
     inherit! :search_paths
     # Pods for testing

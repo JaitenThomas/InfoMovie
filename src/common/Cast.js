@@ -41,7 +41,9 @@ class Cast extends Component {
         >
           {this.renderPosterImage()}
           <View style={{ width: 100 }}>
-            <Text style={{ color: 'white' }}>{this.props.item.character}</Text>
+            <Text style={{ color: 'white' }}>
+              {this.props.item.character || 'Unknown'}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

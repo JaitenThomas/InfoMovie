@@ -134,13 +134,13 @@ class SearchScreen extends Component {
           renderItem={(item, index) => this.renderItem(item.item, index)}
           keyExtractor={(item, index) => index.toString()}
           onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={this.renderFooter}
           ListFooterComponentStyle={{
             height: 40,
             alignItems: 'center'
           }}
-          windowSize={5}
+          windowSize={10}
         />
       </View>
     );

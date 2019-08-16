@@ -21,7 +21,7 @@ class TelevisionScreen extends Component {
     onAirData: [],
     topRated: [],
     error: '',
-    loading: true
+    loading: false
   };
 
   componentDidMount() {
@@ -29,6 +29,8 @@ class TelevisionScreen extends Component {
   }
 
   async fetchData() {
+    this.setState({ loading: true });
+
     const airingTodayURL = `https://api.themoviedb.org/3/tv/airing_today?api_key=${API_KEY}&language=en-US&page=1`;
     const popularURL = `https://api.themoviedb.org/3/tv/popular?api_key=${API_KEY}&language=en-US&page=1`;
     const onAirURL = `https://api.themoviedb.org/3/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`;

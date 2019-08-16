@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
@@ -31,17 +31,29 @@ class TelevisionMoreScreen extends Component {
   });
 
   fetchData = () => {
-    this.setState({ loading: true });
-
     const url = `https://api.themoviedb.org/3/tv/${this.props.navigation.getParam(
       'type'
     )}?api_key=${API_KEY}&language=en-US&page=${this.state.page}&with_genres=${
       this.state.id
     }`;
 
+    this.setState({ loading: true });
+
     fetch(url)
       .then(res => res.json())
       .then(res => {
+        if (res.errors !== undefined && res.errors.length > 0) {
+          const message = 'No input provided';
+
+          return this.setState({ error: message });
+        }
+
+        if (res.results !== undefined && res.results.length <= 0) {
+          const message = 'No more data found';
+
+          return this.setState({ error: message });
+        }
+
         this.setState({
           data: [...this.state.data, ...res.results],
           loading: false
@@ -62,7 +74,16 @@ class TelevisionMoreScreen extends Component {
   };
 
   renderFooter = () => {
+    if (this.state.error) {
+      return (
+        <Text style={{ color: 'white', fontSize: vmin(5) }}>
+          {this.state.error}
+        </Text>
+      );
+    }
+
     if (!this.state.loading) return null;
+
     return (
       <View
         style={{
@@ -106,9 +127,13 @@ class TelevisionMoreScreen extends Component {
           renderItem={(item, index) => this.renderItem(item.item, index)}
           keyExtractor={item => item.id}
           onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={this.renderFooter}
-          ListFooterComponentStyle={{ height: 40 }}
+          ListFooterComponentStyle={{
+            height: 40,
+            alignItems: 'center'
+          }}
+          windowSize={10}
         />
       </View>
     );

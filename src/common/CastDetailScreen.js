@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, ImageBackground } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  ImageBackground,
+  ActivityIndicator
+} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 
@@ -8,6 +14,8 @@ const PERSON_PATH = `https://api.themoviedb.org/3/person/`;
 const IMAGE_PATH = 'https://image.tmdb.org/t/p/original';
 
 import LinearGradient from 'react-native-linear-gradient';
+
+import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
 
 class CastDetailScreen extends Component {
   state = {
@@ -28,26 +36,25 @@ class CastDetailScreen extends Component {
     headerTintColor: 'white'
   });
 
-  fetchPersonDetails() {
+  async fetchPersonDetails() {
     this.setState({ loading: true });
 
-    const URI = `${PERSON_PATH}${
+    const personURI = `${PERSON_PATH}${
       this.state.id
     }?api_key=${API_KEY}&language=en-US`;
 
-    fetch(URI)
-      .then(res => res.json())
-      .then(res =>
-        this.setState(
-          { data: res, birthday: res.birthday, loading: false },
-          () => {
-            this.calculateAge(res.birthday);
-            this.formatBirthday(res.birthday);
-            this.formatGender(res.gender);
-            this.formatKnownForDepartment(res.known_for_department);
-          }
-        )
-      );
+    const personData = await fetch(personURI);
+    const personJson = await personData.json();
+
+    this.setState(
+      { data: personJson, birthday: personJson.birthday, loading: false },
+      () => {
+        this.calculateAge(personJson.birthday);
+        this.formatBirthday(personJson.birthday);
+        this.formatGender(personJson.gender);
+        this.formatKnownForDepartment(personJson.known_for_department);
+      }
+    );
   }
 
   componentWillMount() {
@@ -118,77 +125,104 @@ class CastDetailScreen extends Component {
     }
   }
 
-  render() {
-    return (
-      <View style={{ flex: 1, flexDirection: 'column' }}>
-        {/*HEADER CONTAINER*/}
-        <View style={{ flex: 1, backgroundColor: 'red' }}>
-          <ImageBackground
-            resizeMode={'cover'}
-            style={{
-              flex: 1
-            }}
-            source={{
-              uri: `${IMAGE_PATH}${this.props.navigation.getParam('image')}`
-            }}
-          >
-            <LinearGradient
-              start={{ x: 0.5, y: 0 }}
-              colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
+  renderLoading() {
+    if (this.state.loading == true) {
+      return (
+        <View style={styles.loadingContainerStyle}>
+          <ActivityIndicator size={vmin(10)} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ flex: 1, flexDirection: 'column' }}>
+          {/*HEADER CONTAINER*/}
+          <View style={{ flex: 1, backgroundColor: 'red' }}>
+            <ImageBackground
+              resizeMode={'cover'}
               style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center'
+                flex: 1
+              }}
+              source={{
+                uri: `${IMAGE_PATH}${this.props.navigation.getParam('image')}`
               }}
             >
-              <View
+              <LinearGradient
+                start={{ x: 0.5, y: 0 }}
+                colors={['rgba(0, 0, 0, .4)', 'rgba(0, 0, 0, .5)']}
                 style={{
-                  display: 'flex',
-                  height: '60%',
-                  flexDirection: 'row',
-                  width: '85%'
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
-                <View style={{ flex: 1 }}>{this.renderProfileImage()}</View>
                 <View
                   style={{
-                    flex: 2,
-                    marginLeft: 5,
-                    justifyContent: 'space-around'
+                    display: 'flex',
+                    height: '60%',
+                    flexDirection: 'row',
+                    width: '85%'
                   }}
                 >
-                  <Text
-                    style={{ color: 'white', fontSize: 25, fontWeight: 'bold' }}
+                  <View style={{ flex: 1 }}>{this.renderProfileImage()}</View>
+                  <View
+                    style={{
+                      flex: 2,
+                      marginLeft: 5,
+                      justifyContent: 'space-around'
+                    }}
                   >
-                    {this.state.data.name}
-                  </Text>
-                  <Text style={{ color: 'white', fontSize: 20 }}>
-                    {`${this.state.gender} | ` +
-                      this.state.knownForDepartment || 'Unknown'}
-                  </Text>
-                  <Text style={{ color: 'white', fontSize: 20 }}>
-                    {this.state.birthday + ` | ${this.state.age}` || 'Unknown'}
-                  </Text>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 25,
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {this.state.data.name}
+                    </Text>
+                    <Text style={{ color: 'white', fontSize: 20 }}>
+                      {`${this.state.gender} | ` +
+                        this.state.knownForDepartment || 'Unknown'}
+                    </Text>
+                    <Text style={{ color: 'white', fontSize: 20 }}>
+                      {this.state.birthday + ` | ${this.state.age}` ||
+                        'Unknown'}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </LinearGradient>
-          </ImageBackground>
-        </View>
+              </LinearGradient>
+            </ImageBackground>
+          </View>
 
-        {/*BODY CONTAINER*/}
-        <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
-          <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}>
-              Biography
-            </Text>
-            <Text style={{ color: 'white' }}>
-              {this.state.data.biography || 'No information provided.'}
-            </Text>
-          </ScrollView>
+          {/*BODY CONTAINER*/}
+          <View style={{ backgroundColor: '#2C2F33', flex: 1.5 }}>
+            <ScrollView style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
+              <Text
+                style={{ fontWeight: 'bold', fontSize: 25, color: 'white' }}
+              >
+                Biography
+              </Text>
+              <Text style={{ color: 'white' }}>
+                {this.state.data.biography || 'No information provided.'}
+              </Text>
+            </ScrollView>
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
+  }
+
+  render() {
+    return <View style={{ flex: 1 }}>{this.renderLoading()}</View>;
   }
 }
+const styles = {
+  loadingContainerStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C2F33'
+  }
+};
 
 export default CastDetailScreen;
