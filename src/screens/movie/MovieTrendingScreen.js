@@ -14,7 +14,9 @@ import Icon from 'react-native-vector-icons/Entypo';
 
 const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { vmin } from 'react-native-expo-viewport-units';
+
+import SplashScreen from 'react-native-splash-screen';
 
 class MovieTrendingScreen extends Component {
   state = {
@@ -27,6 +29,9 @@ class MovieTrendingScreen extends Component {
   };
 
   componentDidMount() {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 200);
     this.fetchData();
   }
 

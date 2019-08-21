@@ -6,7 +6,7 @@ const API_KEY = '11ede500a8486b89fde5f1293576baab';
 
 import Poster from '../../common/Poster';
 
-import _ from 'lodash';
+import { vmin } from 'react-native-expo-viewport-units';
 
 class TelevisionMoreScreen extends Component {
   state = {

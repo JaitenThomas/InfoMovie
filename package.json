@@ -21,6 +21,7 @@
     "react-native-reanimated": "^1.2.0",
     "react-native-slider": "^0.11.0",
     "react-native-snap-carousel": "^3.8.0",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-webview": "^5.12.1",
     "react-native-yt-player": "^1.0.6",
@@ -30,8 +31,8 @@
     "@babel/core": "^7.5.5",
     "@babel/runtime": "^7.5.5",
     "@react-native-community/eslint-config": "^0.0.3",
-    "babel-jest": "^24.1.0",
-    "jest": "^24.1.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
     "jetifier": "^1.6.4",
     "metro-react-native-babel-preset": "^0.54.1",
     "react-test-renderer": "16.8.6"

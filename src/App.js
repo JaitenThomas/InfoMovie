@@ -6,8 +6,7 @@ import {
   createStackNavigator,
   createAppContainer,
   createBottomTabNavigator,
-  createMaterialTopTabNavigator,
-  header
+  createMaterialTopTabNavigator
 } from 'react-navigation';
 
 import SearchScreen from './screens/SearchScreen';
@@ -26,7 +25,7 @@ import TelevisionDetailScreen from './screens/television/TelevisionDetailScreen'
 import TelevisionGenreMoreScreen from './screens/television/TelevisionGenreMoreScreen';
 import TelevisionMoreScreen from './screens/television/TelevisionMoreScreen';
 
-import { vw, vh, vmin, vmax } from 'react-native-expo-viewport-units';
+import { vmin } from 'react-native-expo-viewport-units';
 
 class App extends Component {
   state = {};
